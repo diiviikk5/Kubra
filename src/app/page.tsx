@@ -24,7 +24,7 @@ export default function LandingPage() {
   return (
     <main className={`fixed inset-0 bg-black text-white overflow-hidden select-none font-geist ${motionPending ? 'motion-pending' : ''}`}>
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Geist+Pixel:wght@400;500;600;700&family=Geist+Mono:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=Tiny5&family=Geist+Mono:wght@300;400;500;600;700;800;900&display=swap');
 
         /* Desktop Tokens */
         .screen-container {
@@ -194,20 +194,22 @@ export default function LandingPage() {
           </button>
         </header>
 
-        {/* 🌟 CENTERPIECE: PLAIN WHITE KUBRA IN GEIST PIXEL (z-20) */}
-        <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
+        {/* 🌟 CENTERPIECE: SEAMLESS AUTHENTIC PIXEL KUBRA (z-20) */}
+        <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
           <h1
-            className="font-pixel text-[clamp(76px,16vw,200px)] font-bold tracking-tight text-white uppercase leading-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]"
+            className="font-pixel text-[clamp(80px,18vw,230px)] font-bold tracking-[0.06em] text-white uppercase leading-none drop-shadow-[0_12px_40px_rgba(0,0,0,0.98)] select-none"
             style={{
-              fontFamily: "'Geist Pixel', 'Geist Mono', monospace",
+              fontFamily: "'Pixelify Sans', 'Silkscreen', 'Tiny5', monospace",
               color: '#ffffff',
+              imageRendering: 'pixelated',
+              WebkitFontSmoothing: 'none',
             }}
           >
             KUBRA
           </h1>
         </div>
 
-        {/* Bottom-Left Hero Content (Cleaned up, no extra copy) */}
+        {/* Bottom-Left Hero Content */}
         <div
           className="absolute flex flex-col items-start z-20 font-geist"
           style={{
