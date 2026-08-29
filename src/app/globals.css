@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Silkscreen:wght@400;700&family=DotGothic16&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Pixel:wght@400;500;600;700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-geist-pixel: 'Geist Mono', 'Silkscreen', 'DotGothic16', monospace;
+  --font-geist-pixel: 'Geist Pixel', 'Geist Mono', monospace;
   font-family: var(--font-geist-pixel);
   color-scheme: dark;
-  --foreground-rgb: 248, 250, 252;
+  --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
 }
@@ -25,21 +25,19 @@ html, body {
   overflow: hidden;
   background: #000000;
   color: #ffffff;
-  font-family: var(--font-geist-pixel);
+  font-family: 'Geist Pixel', 'Geist Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
 }
 
-/* Pixel Art & Sharp Typography */
 .font-pixel {
-  font-family: 'Silkscreen', 'Geist Mono', monospace;
-  letter-spacing: -0.05em;
-  text-rendering: pixelated;
+  font-family: 'Geist Pixel', 'Geist Mono', monospace;
+  letter-spacing: -0.02em;
 }
 
 .font-geist {
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Geist Pixel', 'Geist Mono', monospace;
 }
 
 /* Custom scrollbar */

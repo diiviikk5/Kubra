@@ -24,6 +24,8 @@ export default function LandingPage() {
   return (
     <main className={`fixed inset-0 bg-black text-white overflow-hidden select-none font-geist ${motionPending ? 'motion-pending' : ''}`}>
       <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Geist+Pixel:wght@400;500;600;700&family=Geist+Mono:wght@100..900&display=swap');
+
         /* Desktop Tokens */
         .screen-container {
           --gutter-start: clamp(36px, 4.177vw, 96px);
@@ -206,17 +208,22 @@ export default function LandingPage() {
           </button>
         </header>
 
-        {/* 🌟 CENTERPIECE: KUBRA IN GEIST PIXEL (z-20) */}
-        <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
+        {/* 🌟 CENTERPIECE: PLAIN WHITE KUBRA IN GEIST PIXEL (z-20) */}
+        <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/15 backdrop-blur-md text-[11px] font-geist text-neutral-300 uppercase tracking-widest mb-4">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
             <span>ONDC Citizen Superlayer • Open Rails</span>
           </div>
 
-          {/* Giant Pixelated Wordmark */}
-          <h1 className="font-pixel text-[clamp(64px,14vw,180px)] font-bold tracking-tight text-white uppercase leading-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
-            <span className="text-white">KU</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#ffc5dc] to-[#fd86db]">BRA</span>
+          {/* Giant Plain White Pixel Wordmark */}
+          <h1
+            className="font-pixel text-[clamp(68px,15vw,190px)] font-bold tracking-tight text-white uppercase leading-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]"
+            style={{
+              fontFamily: "'Geist Pixel', 'Geist Mono', monospace",
+              color: '#ffffff',
+            }}
+          >
+            KUBRA
           </h1>
 
           <p className="font-geist text-[clamp(12px,1.4vw,16px)] text-neutral-300/80 max-w-xl mx-auto mt-3 tracking-tight">
