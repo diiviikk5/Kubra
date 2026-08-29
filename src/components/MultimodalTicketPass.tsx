@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { MultimodalRoute, SAMPLE_TRANSIT_ROUTES } from '@/lib/mock-data';
-import { Train, Bus, Car, QrCode, AlertCircle, RefreshCw, Wifi, WifiOff, CheckCircle2, Clock, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
+import { Train, Bus, Car, QrCode, AlertCircle, RefreshCw, Wifi, CheckCircle2, Clock, ArrowRight, ShieldCheck, MapPin, Copy, Check } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import { useTheme } from '@/context/ThemeContext';
 import confetti from 'canvas-confetti';
 
 interface MultimodalTicketPassProps {
@@ -10,28 +12,30 @@ interface MultimodalTicketPassProps {
 }
 
 export const MultimodalTicketPass: React.FC<MultimodalTicketPassProps> = ({ lang }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [selectedRoute, setSelectedRoute] = useState<MultimodalRoute>(SAMPLE_TRANSIT_ROUTES[0]);
   const [isDelayed, setIsDelayed] = useState(false);
-  const [offlineMode, setOfflineMode] = useState(false);
   const [ticketActivated, setTicketActivated] = useState(false);
+  const [copiedQr, setCopiedQr] = useState(false);
 
   const handleSimulateDelay = () => {
     setIsDelayed(true);
-    // Dynamically adjust the legs
-    const updatedLegs = selectedRoute.legs.map((leg, idx) => {
+    const updatedLegs = selectedRoute.legs.map((leg) => {
       if (leg.type === 'METRO') {
         return {
           ...leg,
           status: 'DELAYED' as const,
           delayMinutes: 8,
-          arrivalTime: '09:07 AM'
+          arrivalTime: '09:06 AM'
         };
       }
       if (leg.type === 'BUS') {
         return {
           ...leg,
           departureTime: '09:12 AM',
-          arrivalTime: '09:28 AM',
+          arrivalTime: '09:27 AM',
           platformOrBay: 'Bay #4 (Auto-Shifted to Next Slot)'
         };
       }
@@ -40,7 +44,7 @@ export const MultimodalTicketPass: React.FC<MultimodalTicketPassProps> = ({ lang
           ...leg,
           departureTime: '09:30 AM',
           arrivalTime: '09:38 AM',
-          platformOrBay: 'Pickup Point Beta (Driver Auto-Notified)'
+          platformOrBay: 'Smart Bay Alpha (Driver Auto-Notified)'
         };
       }
       return leg;
@@ -50,6 +54,7 @@ export const MultimodalTicketPass: React.FC<MultimodalTicketPassProps> = ({ lang
       ...selectedRoute,
       totalDurationMinutes: selectedRoute.totalDurationMinutes + 8,
       dynamicReRouteActive: true,
+      qrTicketPayload: 'ONDC:MOBILITY:TICKET:MM-PASS-2026-99120:REROUTED_DELAY8M:VALID',
       legs: updatedLegs
     });
   };
@@ -62,182 +67,154 @@ export const MultimodalTicketPass: React.FC<MultimodalTicketPassProps> = ({ lang
   const handleActivateTicket = () => {
     setTicketActivated(true);
     confetti({
-      particleCount: 60,
-      spread: 60,
+      particleCount: 50,
+      spread: 50,
       origin: { y: 0.7 }
     });
+  };
+
+  const handleCopyQrPayload = () => {
+    navigator.clipboard.writeText(selectedRoute.qrTicketPayload);
+    setCopiedQr(true);
+    setTimeout(() => setCopiedQr(false), 2000);
   };
 
   return (
     <div className="w-full space-y-6">
       {/* Route Selector Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-2xl border ${
+        isDark ? 'bg-[#121214] border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'
+      }`}>
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-mono font-semibold">
+            <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border ${
+              isDark ? 'bg-zinc-800 text-zinc-300 border-zinc-700' : 'bg-zinc-100 text-zinc-700 border-zinc-300'
+            }`}>
               ONDC Mobility Rails
             </span>
-            <span className="text-xs text-slate-400 font-mono">9 Metros • 21 Bus Transit Bodies</span>
+            <span className={`text-xs font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+              9 Metros • 21 Bus Transit Bodies
+            </span>
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-white mt-1">{selectedRoute.title}</h3>
+          <h3 className="text-base sm:text-lg font-bold mt-1">{selectedRoute.title}</h3>
         </div>
 
-        {/* Route switcher tabs */}
+        {/* Action Controls */}
         <div className="flex items-center gap-2">
-          {SAMPLE_TRANSIT_ROUTES.map((route) => (
+          {isDelayed ? (
             <button
-              key={route.id}
-              onClick={() => {
-                setSelectedRoute(route);
-                setIsDelayed(false);
-              }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                selectedRoute.id === route.id
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                  : 'bg-slate-800 text-slate-400 hover:text-white'
+              onClick={handleResetSchedule}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
+                isDark ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700 text-zinc-300' : 'bg-zinc-100 hover:bg-zinc-200 border-zinc-300 text-zinc-800'
               }`}
             >
-              {route.id.includes('mum') ? 'Mumbai Commute' : 'Delhi Commute'}
+              Reset Schedule
             </button>
-          ))}
+          ) : (
+            <button
+              onClick={handleSimulateDelay}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-medium transition-all flex items-center gap-1.5 ${
+                isDark ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700 text-amber-400' : 'bg-zinc-100 hover:bg-zinc-200 border-zinc-300 text-amber-700'
+              }`}
+            >
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span>Simulate Metro Delay (+8m)</span>
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Main Ticket Pass & Journey Visualizer Grid */}
+      {/* Main Ticket Pass Card & Journey Legs Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Col: Composite 1-QR Ticket Card */}
+        {/* Left Column: The 1-QR Dynamic Ticket Pass */}
         <div className="lg:col-span-5 flex flex-col">
-          <div
-            className={`rounded-2xl border-2 p-5 flex flex-col justify-between shadow-2xl relative transition-all ${
-              offlineMode
-                ? 'bg-gradient-to-b from-slate-900 to-slate-950 border-amber-500/60'
-                : 'bg-gradient-to-b from-blue-950/80 via-slate-900 to-slate-950 border-blue-500/50'
-            }`}
-          >
-            {/* Top Badge: Offline indicator or Active pass */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
-                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-                  Universal Transit Pass
-                </span>
-              </div>
-              <span className="text-[10px] px-2 py-0.5 rounded font-mono font-semibold bg-slate-800 text-amber-300 border border-slate-700">
-                {selectedRoute.compositeTicketId.split('-')[2]}-{selectedRoute.compositeTicketId.split('-')[3]}
-              </span>
-            </div>
-
-            {/* Middle QR Code Display */}
-            <div className="my-5 p-4 rounded-xl bg-white text-slate-950 flex flex-col items-center justify-center shadow-inner">
-              {/* Simulated High-Res Dynamic QR */}
-              <div className="relative p-2 bg-slate-950 rounded-lg">
-                <QrCode className="w-36 h-36 text-white" />
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="p-1.5 rounded-md bg-amber-400 text-slate-950 font-black text-xs shadow-md">
-                    ओ
-                  </div>
+          <div className={`p-6 rounded-2xl border ${
+            isDark ? 'bg-[#121214] border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'
+          } flex flex-col justify-between space-y-5`}>
+            <div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className={`text-[10px] font-mono uppercase tracking-widest ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                    YatriSetu Composite Pass
+                  </span>
+                  <div className="text-lg font-extrabold">{selectedRoute.compositeTicketId}</div>
+                </div>
+                <div className={`px-2.5 py-1 rounded-full text-xs font-mono font-semibold border ${
+                  selectedRoute.dynamicReRouteActive
+                    ? isDark ? 'bg-amber-950/40 text-amber-400 border-amber-800' : 'bg-amber-50 text-amber-800 border-amber-300'
+                    : isDark ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800' : 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                }`}>
+                  {selectedRoute.dynamicReRouteActive ? 'Auto-Re-Routed' : 'Active Pass'}
                 </div>
               </div>
 
-              <div className="mt-3 text-center">
-                <div className="text-xs font-black tracking-tight text-slate-900 font-mono">
-                  ONE-PASS: METRO + BEST + AUTO
+              {/* Dynamic QR Display */}
+              <div className="flex flex-col items-center justify-center my-6">
+                <div className="p-3.5 bg-white rounded-2xl border border-zinc-300 shadow-md">
+                  <QRCodeSVG
+                    value={selectedRoute.qrTicketPayload}
+                    size={180}
+                    level="H"
+                    includeMargin={false}
+                  />
                 </div>
-                <p className="text-[10px] text-slate-600 font-mono mt-0.5">
-                  Scan turnstile at AFC Gate • Auto-Transfers Seamlessly
-                </p>
+                <div className="flex items-center gap-2 mt-3 text-xs font-mono">
+                  <span className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>Gate Scan Valid: 9 Metros</span>
+                  <button
+                    onClick={handleCopyQrPayload}
+                    className="text-zinc-400 hover:text-white flex items-center gap-1 text-[11px]"
+                  >
+                    {copiedQr ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    <span>{copiedQr ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Route Summary Details */}
+              <div className={`p-4 rounded-xl border ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-zinc-50 border-zinc-200'} space-y-2 text-xs`}>
+                <div className="flex justify-between">
+                  <span className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>Origin Station</span>
+                  <span className="font-semibold">{selectedRoute.from}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>Destination</span>
+                  <span className="font-semibold">{selectedRoute.to}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>Total Fare Paid</span>
+                  <span className="font-bold text-sm">₹{selectedRoute.totalFare}.00</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>Carbon Saved</span>
+                  <span className="font-semibold text-emerald-500">{selectedRoute.carbonSavedKg} kg CO₂</span>
+                </div>
               </div>
             </div>
 
-            {/* Pass Metadata details */}
-            <div className="space-y-2 py-3 border-y border-slate-800 text-xs font-mono">
-              <div className="flex justify-between text-slate-400">
-                <span>Total Combined Fare:</span>
-                <span className="text-amber-400 font-bold text-sm">₹{selectedRoute.totalFare} (All 3 Legs)</span>
-              </div>
-              <div className="flex justify-between text-slate-400">
-                <span>Est. Commute Time:</span>
-                <span className="text-white font-bold">{selectedRoute.totalDurationMinutes} Minutes</span>
-              </div>
-              <div className="flex justify-between text-slate-400">
-                <span>CO₂ Emission Offset:</span>
-                <span className="text-emerald-400 font-bold">{selectedRoute.carbonSavedKg} kg Saved</span>
-              </div>
-            </div>
-
-            {/* Offline Resilience Switcher */}
-            <div className="mt-4 pt-2 flex items-center justify-between">
-              <button
-                onClick={() => setOfflineMode(!offlineMode)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all ${
-                  offlineMode
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
-                    : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
-                }`}
-              >
-                {offlineMode ? <WifiOff className="w-3.5 h-3.5" /> : <Wifi className="w-3.5 h-3.5" />}
-                <span>{offlineMode ? 'Offline JWT Active (Underground)' : 'Simulate 0-Bar Underground'}</span>
-              </button>
-
-              <button
-                onClick={handleActivateTicket}
-                className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-md shadow-emerald-600/30"
-              >
-                {ticketActivated ? 'Pass Validated' : 'Verify Pass'}
-              </button>
-            </div>
+            <button
+              onClick={handleActivateTicket}
+              className={`w-full py-3 rounded-xl font-bold text-xs transition-all ${
+                ticketActivated
+                  ? 'bg-emerald-600 text-white cursor-default'
+                  : isDark ? 'bg-white hover:bg-zinc-200 text-black' : 'bg-black hover:bg-zinc-800 text-white'
+              }`}
+            >
+              {ticketActivated ? '✓ Pass Ready for Turnstile Scan' : 'Tap to Activate at Gate'}
+            </button>
           </div>
         </div>
 
-        {/* Right Col: Interactive Transit Timeline & Real-Time Delay Simulator */}
-        <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
-          {/* Dynamic Delay Simulation Action Bar */}
-          <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
-            <div>
-              <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-amber-400" />
-                <span>Live Disruption & Delay Re-router</span>
-              </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                Test how ONDC BharatOS solves connecting transport failures
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {!isDelayed ? (
-                <button
-                  onClick={handleSimulateDelay}
-                  className="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all hover:scale-105"
-                >
-                  <AlertCircle className="w-4 h-4" />
-                  <span>Simulate 8-Min Metro Delay</span>
-                </button>
-              ) : (
-                <button
-                  onClick={handleResetSchedule}
-                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center gap-1.5 border border-slate-700 transition-colors"
-                >
-                  <RefreshCw className="w-4 h-4 text-emerald-400" />
-                  <span>Reset to On-Time</span>
-                </button>
-              )}
-            </div>
+        {/* Right Column: Multimodal Leg Details */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold font-mono uppercase tracking-wider">
+              Multimodal Journey Breakdown
+            </span>
+            <span className={`text-xs font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+              Total Time: {selectedRoute.totalDurationMinutes} mins
+            </span>
           </div>
 
-          {/* Active Delay Alert if triggered */}
-          {isDelayed && (
-            <div className="p-3.5 rounded-xl bg-amber-950/60 border border-amber-500/50 flex items-start gap-2.5 text-xs text-amber-200 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold text-amber-300">
-                  Dynamic Re-routing Triggered (Zero Cancellation Penalty):
-                </span>{' '}
-                Metro Line 1 delayed by 8 mins. ONDC BharatOS automatically adjusted your BEST bus departure time and shifted your Bharat Taxi driver to Pickup Point Beta with zero extra fee.
-              </div>
-            </div>
-          )}
-
-          {/* Timeline Legs */}
           <div className="space-y-3">
             {selectedRoute.legs.map((leg, index) => {
               const isMetro = leg.type === 'METRO';
@@ -247,67 +224,53 @@ export const MultimodalTicketPass: React.FC<MultimodalTicketPassProps> = ({ lang
               return (
                 <div
                   key={index}
-                  className={`p-3.5 rounded-xl border transition-all ${
-                    leg.status === 'DELAYED'
-                      ? 'bg-rose-950/30 border-rose-500/60'
-                      : 'bg-slate-900/90 border-slate-800'
-                  }`}
+                  className={`p-4 rounded-xl border ${
+                    isDark ? 'bg-[#121214] border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'
+                  } space-y-2`}
                 >
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div
-                        className={`p-2 rounded-lg text-white font-bold ${
-                          isMetro
-                            ? 'bg-blue-600'
-                            : isBus
-                            ? 'bg-emerald-600'
-                            : 'bg-amber-500 text-slate-950'
-                        }`}
-                      >
-                        {isMetro ? <Train className="w-4 h-4" /> : isBus ? <Bus className="w-4 h-4" /> : <Car className="w-4 h-4 text-slate-950" />}
+                      <div className={`p-2 rounded-lg border ${
+                        isMetro
+                          ? isDark ? 'bg-blue-950/40 text-blue-400 border-blue-800' : 'bg-blue-50 text-blue-700 border-blue-300'
+                          : isBus
+                          ? isDark ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800' : 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                          : isDark ? 'bg-amber-950/40 text-amber-400 border-amber-800' : 'bg-amber-50 text-amber-700 border-amber-300'
+                      }`}>
+                        {isMetro ? <Train className="w-4 h-4" /> : isBus ? <Bus className="w-4 h-4" /> : <Car className="w-4 h-4" />}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-white flex items-center gap-2">
-                          <span>{leg.agency}</span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                            {leg.routeCode}
-                          </span>
-                        </div>
-                        <div className="text-[11px] text-slate-400">
-                          {leg.from} <span className="text-slate-600">➔</span> {leg.to}
+                        <div className="font-bold text-xs">{leg.agency}</div>
+                        <div className={`text-[11px] font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                          {leg.routeCode}
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-xs font-bold text-amber-400">₹{leg.fare}</span>
-                      <div className="text-[10px] text-slate-400 font-mono">
-                        {leg.departureTime} - {leg.arrivalTime}
+                      <div className="text-xs font-bold font-mono">
+                        {leg.departureTime} ➔ {leg.arrivalTime}
+                      </div>
+                      <div className={`text-[11px] ${leg.status === 'DELAYED' ? 'text-amber-500 font-bold' : isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                        {leg.status === 'DELAYED' ? `+${leg.delayMinutes}m delay recorded` : `${leg.durationMinutes} mins • ₹${leg.fare}`}
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400 font-mono flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-slate-500" />
-                      {leg.platformOrBay || 'Standard Boarding'}
-                    </span>
-                    <span
-                      className={`font-mono font-semibold ${
-                        leg.status === 'DELAYED' ? 'text-rose-400' : 'text-emerald-400'
-                      }`}
-                    >
-                      {leg.status === 'DELAYED' ? `+${leg.delayMinutes}m Delay Recalibrated` : 'On Time'}
-                    </span>
+                  <div className={`pt-2 border-t ${isDark ? 'border-zinc-800' : 'border-zinc-100'} flex items-center justify-between text-[11px]`}>
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-zinc-400" />
+                      <span>{leg.from} ➔ {leg.to}</span>
+                    </div>
+                    {leg.platformOrBay && (
+                      <span className={`font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                        {leg.platformOrBay}
+                      </span>
+                    )}
                   </div>
                 </div>
               );
             })}
-          </div>
-
-          {/* Hackathon Value Note */}
-          <div className="p-3 rounded-xl bg-blue-950/40 border border-blue-800/40 text-[11px] text-slate-300">
-            <span className="font-bold text-blue-300">Why this revolutionizes Indian transit:</span> Commuters no longer juggle 3 separate apps (DMRC, Chalo, Uber). One open protocol pass ties the whole commute together, saving 20 minutes and ₹40 in cancellation fees every day.
           </div>
         </div>
       </div>

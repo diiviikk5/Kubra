@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 export const metadata: Metadata = {
-  title: 'ONDC BharatOS - The Citizen Superlayer for India\'s Open Network',
-  description: 'Built for Build What Moves India. Rethinking ONDC Retail, Transit, and Dispute Resolution into a unified citizen experience.',
+  title: 'Kubra — The Open Commerce Superlayer for Bharat',
+  description: 'Unifying multi-seller retail, YatriSetu multimodal transit, and 60-second dispute settlements across India\'s open digital network.',
 };
 
 export default function RootLayout({
@@ -13,8 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-slate-950 text-slate-100 antialiased min-h-screen selection:bg-blue-600 selection:text-white">
-        {children}
+      <body className="bg-[#09090b] text-[#fafafa] antialiased min-h-screen selection:bg-zinc-700 selection:text-white">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
