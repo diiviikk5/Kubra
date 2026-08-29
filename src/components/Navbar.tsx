@@ -3,7 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, Train, ShieldCheck, Terminal, Globe, Zap, Users } from 'lucide-react';
+import { ShoppingBag, Train, ShieldCheck, Terminal, Globe, Zap, Users, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
 
 interface NavbarProps {
   lang: 'en' | 'hi';
@@ -17,18 +18,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenInspector,
 }) => {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   const navItems = [
     {
       href: '/',
-      labelEn: 'Citizen Superlayer',
+      labelEn: 'Superlayer',
       labelHi: 'नागरिक हब',
       icon: Zap
     },
     {
       href: '/retail',
-      labelEn: 'DigiBazaar Retail',
-      labelHi: 'किराना एवं डिजिकैटलॉग',
+      labelEn: 'Universal Retail',
+      labelHi: 'किराना कैटलॉग',
       icon: ShoppingBag
     },
     {
@@ -52,113 +55,86 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#222] bg-[#121212]/95 backdrop-blur-md font-geist">
-      {/* Top Protocol Status Ticker */}
-      <div className="bg-gradient-to-r from-blue-950/60 via-[#141414] to-emerald-950/60 px-4 py-1 text-xs text-neutral-300 border-b border-[#222] flex items-center justify-between font-mono">
-        <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
-          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="text-emerald-400 font-semibold">ONDC DECENTRALIZED RAILS:</span>
-          <span className="text-neutral-300">2,400+ Local &amp; National Seller NPs Active</span>
-          <span className="text-neutral-600">|</span>
-          <span className="text-neutral-300">std:022 Mumbai Node</span>
-          <span className="text-neutral-600">|</span>
-          <span className="text-sky-400">9 Metros &amp; 21 Bus Networks</span>
-        </div>
-        <div className="hidden md:flex items-center gap-3 text-neutral-400 text-[11px]">
-          <span>DPIIT Digital Public Infrastructure • Beckn v1.0.0</span>
-        </div>
-      </div>
-
-      {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-amber-400 to-rose-500 p-0.5 shadow-md group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-[#121212] rounded-[10px] flex items-center justify-center font-bold text-white text-base">
-                  K
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-lg tracking-tight text-white">Kubra</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono font-medium">
-                    ONDC Core
-                  </span>
-                </div>
-                <p className="text-[10px] text-neutral-400 -mt-1 font-medium hidden sm:block">
-                  {lang === 'hi' ? 'नागरिक खुला वाणिज्य नेटवर्क' : 'Open Commerce Superlayer for Bharat'}
-                </p>
-              </div>
-            </Link>
+    <header className={`sticky top-0 z-40 w-full border-b transition-colors duration-300 backdrop-blur-md font-editorial-body ${
+      isDark ? 'border-[#292524] bg-[#0c0a09]/95 text-white' : 'border-[#e7e5e4] bg-[#f5f5f5]/95 text-[#0c0a09]'
+    }`}>
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+        {/* Brand Mark */}
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-display text-sm font-light shadow-sm ${
+            isDark ? 'bg-white text-[#0c0a09]' : 'bg-[#0c0a09] text-white'
+          }`}>
+            K
           </div>
-
-          {/* Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1.5">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                    isActive
-                      ? 'bg-blue-600 text-white shadow-sm'
-                      : 'text-neutral-300 hover:text-white hover:bg-[#202020]'
-                  }`}
-                >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-neutral-400'}`} />
-                  <span>{lang === 'hi' ? item.labelHi : item.labelEn}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Right Action Controls */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Language Switcher */}
-            <button
-              onClick={onLangToggle}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#333] bg-[#181818] hover:bg-[#242424] text-xs font-mono text-neutral-200 transition-colors shadow-sm"
-              title="Toggle English / हिन्दी"
-            >
-              <Globe className="w-3.5 h-3.5 text-amber-400" />
-              <span>{lang === 'en' ? 'हिन्दी' : 'EN'}</span>
-            </button>
-
-            {/* Protocol Inspector */}
-            <button
-              onClick={onOpenInspector}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/50 text-xs font-mono font-semibold text-emerald-300 transition-all shadow-sm"
-            >
-              <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="hidden sm:inline">Beckn Inspector</span>
-              <span className="sm:hidden">Inspect</span>
-            </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className={`font-display text-lg tracking-tight font-light ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>
+                Kubra
+              </span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono ${
+                isDark ? 'bg-[#1c1917] text-[#a8a29e] border-[#292524]' : 'bg-[#f0efed] text-[#4e4e4e] border-[#e7e5e4]'
+              }`}>
+                ONDC Rails
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
+        </Link>
 
-      {/* Mobile Sub-Navigation Bar */}
-      <div className="lg:hidden flex items-center justify-around border-t border-[#222] bg-[#141414] px-2 py-2 overflow-x-auto">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex flex-col items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium whitespace-nowrap ${
-                isActive ? 'text-blue-400 bg-blue-500/10' : 'text-neutral-400'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{lang === 'hi' ? item.labelHi : item.labelEn.split(' ')[0]}</span>
-            </Link>
-          );
-        })}
+        {/* Center Nav Links */}
+        <nav className={`hidden md:flex items-center gap-1 p-1 rounded-full border text-xs font-medium ${
+          isDark ? 'bg-[#1c1917] border-[#292524]' : 'bg-[#f0efed] border-[#e7e5e4]'
+        }`}>
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full transition-all ${
+                  isActive
+                    ? isDark ? 'bg-white text-[#0c0a09] shadow-sm font-semibold' : 'bg-[#0c0a09] text-white shadow-sm font-semibold'
+                    : isDark ? 'text-[#a8a29e] hover:text-white' : 'text-[#777169] hover:text-[#0c0a09]'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{lang === 'hi' ? item.labelHi : item.labelEn}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right Controls */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-full border text-xs transition-colors ${
+              isDark ? 'border-[#292524] bg-[#1c1917] text-[#a8a29e] hover:text-white' : 'border-[#e7e5e4] bg-white text-[#4e4e4e] hover:text-[#0c0a09]'
+            }`}
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+          </button>
+
+          <button
+            onClick={onLangToggle}
+            className={`px-3 py-1.5 rounded-full border text-xs font-mono transition-colors ${
+              isDark ? 'border-[#292524] bg-[#1c1917] text-[#a8a29e] hover:text-white' : 'border-[#e7e5e4] bg-white text-[#4e4e4e] hover:text-[#0c0a09]'
+            }`}
+          >
+            {lang === 'en' ? '🇮🇳 हिंदी' : '🇬🇧 EN'}
+          </button>
+
+          <button
+            onClick={onOpenInspector}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-mono transition-colors ${
+              isDark ? 'border-[#292524] bg-[#1c1917] text-[#a8a29e] hover:text-white' : 'border-[#e7e5e4] bg-white text-[#4e4e4e] hover:text-[#0c0a09]'
+            }`}
+          >
+            <Terminal className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Beckn Inspector</span>
+          </button>
+        </div>
       </div>
     </header>
   );

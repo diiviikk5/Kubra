@@ -2,7 +2,8 @@ export interface ProductItem {
   id: string;
   name: string;
   nameHindi: string;
-  category: 'Groceries' | 'Dairy' | 'Household' | 'Electronics' | 'Personal Care' | 'Snacks';
+  category: string;
+  brand: string;
   packSize: string;
   mrp: number;
   ondcPrice: number;
@@ -11,13 +12,12 @@ export interface ProductItem {
   stockCount: number;
   isAvailable: boolean;
   storeName: string;
-  storeType: 'Kirana' | 'Supermarket' | 'Hardware' | 'Pharmacy' | 'Dairy Stall';
+  storeType: string;
   storeDistance: string;
   deliveryTimeOndc: string;
   deliveryTimeQCommerce: string;
   image: string;
   barcode: string;
-  brand: string;
 }
 
 export interface StoreInventory {
@@ -35,7 +35,7 @@ export interface StoreInventory {
 }
 
 export interface TransitLeg {
-  type: 'WALK' | 'METRO' | 'BUS' | 'AUTO_CAB';
+  type: 'METRO' | 'BUS' | 'AUTO_CAB' | 'WALK' | 'FERRY';
   agency: string;
   routeCode: string;
   from: string;
@@ -44,24 +44,25 @@ export interface TransitLeg {
   departureTime: string;
   arrivalTime: string;
   fare: number;
-  status: 'ON_TIME' | 'DELAYED' | 'CONGESTED';
-  delayMinutes?: number;
+  status: 'ON_TIME' | 'DELAYED' | 'REROUTED' | 'COMPLETED';
   platformOrBay?: string;
+  delayMinutes?: number;
   qrPayload: string;
 }
 
 export interface MultimodalRoute {
   id: string;
+  city: string;
   title: string;
   from: string;
   to: string;
   totalDurationMinutes: number;
   totalFare: number;
   carbonSavedKg: number;
-  legs: TransitLeg[];
   compositeTicketId: string;
   dynamicReRouteActive: boolean;
   qrTicketPayload: string;
+  legs: TransitLeg[];
 }
 
 export interface DisputeCase {
@@ -75,7 +76,7 @@ export interface DisputeCase {
   refundAmount: number;
   sachetInsuranceId: string;
   insurer: string;
-  issueType: 'DAMAGED_IN_TRANSIT' | 'WRONG_ITEM_DELIVERED' | 'TAMPERED_SEAL' | 'SPOILED_PERISHABLE';
+  issueType: 'DAMAGED_IN_TRANSIT' | 'SEAL_BREACH' | 'WRONG_SKU' | 'EXPIRY_TAMPERED' | 'SEVERE_DELAY';
   description: string;
   sampleEvidenceImage: string;
   telemetryLog: {
@@ -86,7 +87,7 @@ export interface DisputeCase {
     tamperSealIntactAtHub: boolean;
   };
   settlementConfidence: number;
-  faultAttribution: 'LOGISTICS_PARTNER' | 'SELLER_PACKAGING' | 'MUTUAL_NO_FAULT';
+  faultAttribution: 'LOGISTICS_PARTNER' | 'SELLER' | 'INSPECTION_OK';
   statutoryClause: string;
 }
 
@@ -98,7 +99,7 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     category: 'Groceries',
     brand: 'ITC Aashirvaad',
     packSize: '5 kg',
-    mrp: 275,
+    mrp: 295,
     ondcPrice: 245,
     quickCommercePrice: 285,
     amazonPrice: 260,
@@ -110,11 +111,11 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     deliveryTimeOndc: '25-35 mins',
     deliveryTimeQCommerce: '10-15 mins',
     image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&q=80',
-    barcode: '8901030383741'
+    barcode: '8901030383857'
   },
   {
     id: 'prod-002',
-    name: 'Fortune Kachi Ghani Mustard Oil (1L Bottle)',
+    name: 'Fortune Kachi Ghani Pure Mustard Oil (1L Pouch)',
     nameHindi: 'फॉर्च्यून कच्ची घानी सरसों का तेल (1L)',
     category: 'Groceries',
     brand: 'Adani Wilmar',
@@ -178,14 +179,14 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
   {
     id: 'prod-005',
     name: 'Tata Salt Vacuum Evaporated Iodized (1kg)',
-    nameHindi: 'टाटा नमक आयोडीन युक्त (1 किग्रा)',
+    nameHindi: 'टाटा नमक शुद्ध वैक्यूम (1 किग्रा)',
     category: 'Groceries',
     brand: 'Tata Consumer',
     packSize: '1 kg',
     mrp: 28,
-    ondcPrice: 25,
-    quickCommercePrice: 30,
-    amazonPrice: 28,
+    ondcPrice: 24,
+    quickCommercePrice: 28,
+    amazonPrice: 26,
     stockCount: 45,
     isAvailable: true,
     storeName: 'Gupta Super Bazaar',
@@ -194,7 +195,7 @@ export const INITIAL_PRODUCTS: ProductItem[] = [
     deliveryTimeOndc: '25-35 mins',
     deliveryTimeQCommerce: '10-15 mins',
     image: 'https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?w=400&q=80',
-    barcode: '8901030010111'
+    barcode: '8901030383000'
   },
   {
     id: 'prod-006',
@@ -327,6 +328,7 @@ export const SAMPLE_STORES: StoreInventory[] = [
 export const SAMPLE_TRANSIT_ROUTES: MultimodalRoute[] = [
   {
     id: 'route-mum-01',
+    city: 'Mumbai',
     title: 'Ghatkopar Station ➔ BKC Financial Hub',
     from: 'Ghatkopar (East)',
     to: 'Bandra-Kurla Complex (Diamond Bourse)',
@@ -354,8 +356,8 @@ export const SAMPLE_TRANSIT_ROUTES: MultimodalRoute[] = [
         type: 'METRO',
         agency: 'MMOPL (Mumbai Metro)',
         routeCode: 'Line 1 (Blue)',
-        from: 'Ghatkopar Metro',
-        to: 'Jagruti Nagar',
+        from: 'Ghatkopar Metro Gate 4',
+        to: 'Jagruti Nagar Station',
         durationMinutes: 8,
         departureTime: '08:50 AM',
         arrivalTime: '08:58 AM',
@@ -368,8 +370,8 @@ export const SAMPLE_TRANSIT_ROUTES: MultimodalRoute[] = [
         type: 'BUS',
         agency: 'BEST City Bus',
         routeCode: 'Route 302 AC',
-        from: 'Kurla Depot Link',
-        to: 'BKC Connector Bus Station',
+        from: 'Kurla Depot Link Bay #4',
+        to: 'BKC Connector Bus Stop',
         durationMinutes: 15,
         departureTime: '09:04 AM',
         arrivalTime: '09:19 AM',
@@ -391,6 +393,149 @@ export const SAMPLE_TRANSIT_ROUTES: MultimodalRoute[] = [
         status: 'ON_TIME',
         platformOrBay: 'Designated Smart Bay Alpha',
         qrPayload: 'ONDC:CAB:BHARAT:AUTO_MH02_EE'
+      }
+    ]
+  },
+  {
+    id: 'route-delhi-01',
+    city: 'Delhi NCR',
+    title: 'Rajiv Chowk ➔ Cyber Hub Gurgaon',
+    from: 'Rajiv Chowk (Connaught Place)',
+    to: 'DLF Cyber Hub (Gurgaon)',
+    totalDurationMinutes: 42,
+    totalFare: 65,
+    carbonSavedKg: 2.1,
+    compositeTicketId: 'DMRC-YATRI-88219',
+    dynamicReRouteActive: false,
+    qrTicketPayload: 'ONDC:MOBILITY:TICKET:DMRC-YATRI-88219:GATE_OK:FARE65:EXP_20260714T2359',
+    legs: [
+      {
+        type: 'METRO',
+        agency: 'DMRC Yellow Line',
+        routeCode: 'Line 2 (Samaypur Badli - HUDA City)',
+        from: 'Rajiv Chowk Gate 2',
+        to: 'Sikanderpur Interchange',
+        durationMinutes: 28,
+        departureTime: '09:00 AM',
+        arrivalTime: '09:28 AM',
+        fare: 40,
+        status: 'ON_TIME',
+        platformOrBay: 'Platform 1 (Southbound)',
+        qrPayload: 'ONDC:METRO:DMRC:YEL_99182'
+      },
+      {
+        type: 'METRO',
+        agency: 'Rapid Metro Gurgaon',
+        routeCode: 'RMGL Loop',
+        from: 'Sikanderpur Rapid Platform',
+        to: 'Cyber City Station',
+        durationMinutes: 6,
+        departureTime: '09:32 AM',
+        arrivalTime: '09:38 AM',
+        fare: 15,
+        status: 'ON_TIME',
+        platformOrBay: 'Platform 2',
+        qrPayload: 'ONDC:METRO:RMGL:CYBER_771'
+      },
+      {
+        type: 'AUTO_CAB',
+        agency: 'BluSmart EV Feeder',
+        routeCode: 'Cyber Shuttle Bay 3',
+        from: 'Cyber City Concourse',
+        to: 'Building 10B Entrance',
+        durationMinutes: 8,
+        departureTime: '09:40 AM',
+        arrivalTime: '09:48 AM',
+        fare: 10,
+        status: 'ON_TIME',
+        platformOrBay: 'Feeder Bay 3',
+        qrPayload: 'ONDC:CAB:BLUSMART:FEEDER_DL01'
+      }
+    ]
+  },
+  {
+    id: 'route-blr-01',
+    city: 'Bengaluru',
+    title: 'Whitefield (Kadugodi) ➔ Indiranagar 100ft Rd',
+    from: 'Kadugodi Tree Park',
+    to: 'Indiranagar 100ft Road Metro',
+    totalDurationMinutes: 38,
+    totalFare: 45,
+    carbonSavedKg: 1.8,
+    compositeTicketId: 'BMRCL-SETU-44192',
+    dynamicReRouteActive: false,
+    qrTicketPayload: 'ONDC:MOBILITY:TICKET:BMRCL-SETU-44192:GATE_OK:FARE45:EXP_20260714T2359',
+    legs: [
+      {
+        type: 'METRO',
+        agency: 'Namma Metro (BMRCL)',
+        routeCode: 'Purple Line',
+        from: 'Kadugodi Tree Park Gate A',
+        to: 'Indiranagar Metro Station',
+        durationMinutes: 26,
+        departureTime: '08:30 AM',
+        arrivalTime: '08:56 AM',
+        fare: 35,
+        status: 'ON_TIME',
+        platformOrBay: 'Platform 1 (Westbound)',
+        qrPayload: 'ONDC:METRO:BMRCL:PUR_44102'
+      },
+      {
+        type: 'BUS',
+        agency: 'BMTC Metro Feeder',
+        routeCode: 'MF-12 AC',
+        from: 'Indiranagar Station Stop',
+        to: '100ft Road 12th Main',
+        durationMinutes: 12,
+        departureTime: '09:00 AM',
+        arrivalTime: '09:12 AM',
+        fare: 10,
+        status: 'ON_TIME',
+        platformOrBay: 'Feeder Bay #1',
+        qrPayload: 'ONDC:BUS:BMTC:MF12_881'
+      }
+    ]
+  },
+  {
+    id: 'route-kochi-01',
+    city: 'Kochi',
+    title: 'Aluva Metro ➔ Fort Kochi Water Jetty',
+    from: 'Aluva Station Gate 1',
+    to: 'Fort Kochi Heritage Jetty',
+    totalDurationMinutes: 48,
+    totalFare: 50,
+    carbonSavedKg: 2.4,
+    compositeTicketId: 'KMRL-WATER-77102',
+    dynamicReRouteActive: false,
+    qrTicketPayload: 'ONDC:MOBILITY:TICKET:KMRL-WATER-77102:GATE_OK:FARE50:EXP_20260714T2359',
+    legs: [
+      {
+        type: 'METRO',
+        agency: 'Kochi Metro (KMRL)',
+        routeCode: 'Blue Line',
+        from: 'Aluva Metro Station',
+        to: 'High Court Jetty Station',
+        durationMinutes: 30,
+        departureTime: '09:15 AM',
+        arrivalTime: '09:45 AM',
+        fare: 30,
+        status: 'ON_TIME',
+        platformOrBay: 'Platform 2',
+        qrPayload: 'ONDC:METRO:KMRL:BLUE_771'
+      },
+      {
+        type: 'FERRY',
+        agency: 'Kochi Water Metro (Electric Boats)',
+        routeCode: 'WM-1 (High Court - Fort Kochi)',
+        from: 'High Court Water Metro Jetty',
+        to: 'Fort Kochi Pier',
+        durationMinutes: 18,
+        departureTime: '09:50 AM',
+        arrivalTime: '10:08 AM',
+        fare: 20,
+        status: 'ON_TIME',
+        platformOrBay: 'Berth 2 (EV Ferry 04)',
+        qrPayload: 'ONDC:FERRY:WATERMETRO:WM1_992'
       }
     ]
   }
@@ -421,5 +566,55 @@ export const SAMPLE_DISPUTES: DisputeCase[] = [
     settlementConfidence: 99.4,
     faultAttribution: 'LOGISTICS_PARTNER',
     statutoryClause: 'ONDC IGM Rules Section 4.2: Automated Transit Damage Escrow Reversal'
+  },
+  {
+    orderId: 'ONDC-ORD-2026-88410',
+    orderDate: '14 July 2026, 06:15 PM',
+    itemTitle: 'Amul Taaza Milk (6x500ml Tetra Pack)',
+    sellerName: 'Shree Krishna Dairy & Sweets',
+    buyerApp: 'Kubra Citizen App',
+    logisticsPartner: 'Dunzo Open Logistics Network',
+    orderAmount: 324,
+    refundAmount: 108,
+    sachetInsuranceId: 'ZK-SACHET-2026-7731',
+    insurer: 'Zurich Kotak General Insurance',
+    issueType: 'SEAL_BREACH',
+    description: '2 pouches punctured during sorting hub conveyor transfer.',
+    sampleEvidenceImage: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500&q=80',
+    telemetryLog: {
+      dispatchTimestamp: '2026-07-14T17:50:00Z',
+      dispatchWeightKg: 3.12,
+      deliveredWeightKg: 2.60,
+      transitShockEventG: 3.9,
+      tamperSealIntactAtHub: false
+    },
+    settlementConfidence: 98.7,
+    faultAttribution: 'LOGISTICS_PARTNER',
+    statutoryClause: 'ONDC IGM Clause 6.1: Hub Sorting Damage Auto-Credit'
+  },
+  {
+    orderId: 'ONDC-ORD-2026-77192',
+    orderDate: '14 July 2026, 04:00 PM',
+    itemTitle: 'Bajaj Rex 500W Replacement Blade Assembly',
+    sellerName: 'Pooja Electricals & Spares',
+    buyerApp: 'Kubra Citizen App',
+    logisticsPartner: 'Porter Quick Logistics',
+    orderAmount: 280,
+    refundAmount: 280,
+    sachetInsuranceId: 'ZK-SACHET-2026-6610',
+    insurer: 'Zurich Kotak General Insurance',
+    issueType: 'WRONG_SKU',
+    description: '750W Heavy Duty blade delivered instead of 500W Rex OEM model.',
+    sampleEvidenceImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&q=80',
+    telemetryLog: {
+      dispatchTimestamp: '2026-07-14T15:20:00Z',
+      dispatchWeightKg: 0.45,
+      deliveredWeightKg: 0.45,
+      transitShockEventG: 0.8,
+      tamperSealIntactAtHub: true
+    },
+    settlementConfidence: 99.1,
+    faultAttribution: 'SELLER',
+    statutoryClause: 'ONDC IGM Clause 2.4: Mismatched SKU Zero-Return Instant Refund'
   }
 ];

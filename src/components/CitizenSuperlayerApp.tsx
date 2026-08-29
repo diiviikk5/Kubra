@@ -42,6 +42,8 @@ import {
 import { ProtocolInspectorDrawer } from '@/components/ProtocolInspectorDrawer';
 import { PaymentGatewayModal } from '@/components/PaymentGatewayModal';
 import { ShelfScannerModal } from '@/components/ShelfScannerModal';
+import { MultimodalTicketPass } from '@/components/MultimodalTicketPass';
+import { DisputeEvidenceAuditor } from '@/components/DisputeEvidenceAuditor';
 import { INITIAL_PRODUCTS, ProductItem } from '@/lib/mock-data';
 import { useTheme } from '@/context/ThemeContext';
 import confetti from 'canvas-confetti';
@@ -830,121 +832,14 @@ export const CitizenSuperlayerApp: React.FC<CitizenSuperlayerAppProps> = ({
         {/* TAB 2: YATRISETU MULTIMODAL TRANSIT */}
         {/* ========================================================================= */}
         {activeTab === 'TRANSIT' && (
-          <div className="space-y-8">
-            <div className="space-y-2">
-              <h2 className={`text-3xl font-display font-light ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>
-                YatriSetu One-Pass Transit
-              </h2>
-              <p className={`text-sm max-w-2xl leading-relaxed ${isDark ? 'text-[#a8a29e]' : 'text-[#4e4e4e]'}`}>
-                Unifying 9 Indian Metros (Mumbai, Delhi, Bangalore, Kochi), BEST city buses, and Bharat Taxi under a single dynamic QR ticket with zero-penalty delay recovery.
-              </p>
-            </div>
-
-            <div className={`p-8 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-8 ${
-              isDark ? 'bg-[#1c1917] border-[#292524]' : 'bg-white border-[#e7e5e4] soft-card-shadow'
-            }`}>
-              <div className="space-y-4 max-w-md">
-                <span className={`text-xs font-mono uppercase ${isDark ? 'text-[#78716c]' : 'text-[#777169]'}`}>
-                  Composite Transit Pass #MM-99120
-                </span>
-                <h3 className={`text-xl font-display font-light ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>
-                  Ghatkopar Station ➔ BKC Diamond Bourse
-                </h3>
-                <div className="space-y-2 text-xs font-mono">
-                  <div className={`flex justify-between py-1 border-b ${isDark ? 'border-[#292524] text-[#a8a29e]' : 'border-[#e7e5e4] text-[#4e4e4e]'}`}>
-                    <span>Metro Line 1 (Ghatkopar to Jagruti Nagar)</span>
-                    <span className={`font-semibold ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>₹20.00</span>
-                  </div>
-                  <div className={`flex justify-between py-1 border-b ${isDark ? 'border-[#292524] text-[#a8a29e]' : 'border-[#e7e5e4] text-[#4e4e4e]'}`}>
-                    <span>BEST Bus Route 302 AC (Kurla to BKC)</span>
-                    <span className={`font-semibold ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>₹15.00</span>
-                  </div>
-                  <div className={`flex justify-between py-1 border-b ${isDark ? 'border-[#292524] text-[#a8a29e]' : 'border-[#e7e5e4] text-[#4e4e4e]'}`}>
-                    <span>Bharat Taxi / Auto Bay #4</span>
-                    <span className={`font-semibold ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>₹20.00</span>
-                  </div>
-                  <div className={`flex justify-between pt-1 font-bold text-sm ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>
-                    <span>Total Composite Fare</span>
-                    <span>₹55.00</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Transit Pass QR Card */}
-              <div className="flex flex-col items-center gap-2">
-                <div className={`p-4 rounded-2xl border ${isDark ? 'bg-white text-black' : 'bg-[#f5f5f5] border-[#e7e5e4]'}`}>
-                  <QrCode className="w-32 h-32" />
-                </div>
-                <span className={`text-[11px] font-mono ${isDark ? 'text-[#78716c]' : 'text-[#777169]'}`}>
-                  Turnstile Gate Scan Valid
-                </span>
-              </div>
-            </div>
-          </div>
+          <MultimodalTicketPass lang={lang} />
         )}
 
         {/* ========================================================================= */}
         {/* TAB 3: 60-SECOND AUTO-DISPUTE */}
         {/* ========================================================================= */}
         {activeTab === 'DISPUTE' && (
-          <div className="space-y-8">
-            <div className="space-y-2">
-              <h2 className={`text-3xl font-display font-light ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>
-                60-Second Auto-IGM Resolution
-              </h2>
-              <p className={`text-sm max-w-2xl leading-relaxed ${isDark ? 'text-[#a8a29e]' : 'text-[#4e4e4e]'}`}>
-                Automated computer vision forensics cross-matched with courier weight sensors eliminate the 14-day multi-party dispute black hole on ONDC.
-              </p>
-            </div>
-
-            <div className={`p-8 rounded-2xl border grid grid-cols-1 md:grid-cols-2 gap-8 ${
-              isDark ? 'bg-[#1c1917] border-[#292524]' : 'bg-white border-[#e7e5e4] soft-card-shadow'
-            }`}>
-              <div className="space-y-3">
-                <span className={`text-xs font-mono uppercase ${isDark ? 'text-[#78716c]' : 'text-[#777169]'}`}>
-                  Unboxing Evidence Verification
-                </span>
-                <div className={`aspect-[4/3] rounded-xl border flex items-center justify-center text-xs font-mono ${
-                  isDark ? 'bg-[#0c0a09] border-[#292524] text-[#78716c]' : 'bg-[#f5f5f5] border-[#e7e5e4] text-[#777169]'
-                }`}>
-                  [Forensic Evidence: Oil Rupture 99.4% Match]
-                </div>
-              </div>
-
-              <div className="space-y-4 text-xs">
-                <span className={`text-xs font-mono uppercase ${isDark ? 'text-[#78716c]' : 'text-[#777169]'}`}>
-                  Escrow Telemetry Check
-                </span>
-                <div className="space-y-2 font-mono">
-                  <div className={`p-3 rounded-lg border flex justify-between ${
-                    isDark ? 'bg-[#0c0a09] border-[#292524]' : 'bg-[#f5f5f5] border-[#e7e5e4]'
-                  }`}>
-                    <span>Dispatched Weight</span>
-                    <span className="font-bold">5.24 kg</span>
-                  </div>
-                  <div className={`p-3 rounded-lg border flex justify-between ${
-                    isDark ? 'bg-[#0c0a09] border-[#292524]' : 'bg-[#f5f5f5] border-[#e7e5e4]'
-                  }`}>
-                    <span>Delivered Weight</span>
-                    <span className="font-bold text-rose-500">4.85 kg (-39% loss)</span>
-                  </div>
-                  <div className={`p-3 rounded-lg border flex justify-between ${
-                    isDark ? 'bg-[#0c0a09] border-[#292524]' : 'bg-[#f5f5f5] border-[#e7e5e4]'
-                  }`}>
-                    <span>Hub Shock Sensor</span>
-                    <span className="font-bold text-rose-500">4.8G Impact</span>
-                  </div>
-                </div>
-
-                <div className={`p-4 rounded-xl border space-y-1 ${
-                  isDark ? 'bg-emerald-950/40 border-emerald-800 text-emerald-300' : 'bg-emerald-50 border-emerald-300 text-emerald-900'
-                }`}>
-                  <div className="font-semibold">Statutory Clause Auto-Settlement</div>
-                  <p className="text-[11px]">₹142.00 refunded directly to citizen UPI VPA in 60 seconds.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <DisputeEvidenceAuditor lang={lang} />
         )}
 
         {/* ========================================================================= */}
