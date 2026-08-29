@@ -57,116 +57,116 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/70 backdrop-blur-sm flex justify-end transition-opacity font-geist">
-      <div className="w-full max-w-2xl bg-[#101010] border-l border-[#282828] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-sm flex justify-end transition-opacity font-editorial-body animate-in fade-in duration-200">
+      <div className="w-full max-w-2xl bg-white border-l border-hairline h-full flex flex-col shadow-card-elevated animate-in slide-in-from-right duration-300">
         {/* Drawer Header */}
-        <div className="p-4 border-b border-[#242424] bg-[#141414] flex items-center justify-between">
+        <div className="p-5 border-b border-hairline bg-canvas flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-              <Terminal className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs">
+              <Terminal className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-white text-base">Beckn Protocol Inspector</h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+                <h3 className="font-semibold text-ink text-sm">Beckn Protocol Inspector</h3>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-surface-strong text-text-body border border-hairline font-mono">
                   v1.0.0 Spec
                 </span>
               </div>
-              <p className="text-xs text-neutral-400">
-                Inspect raw Beckn Protocol JSON contracts &amp; AI Cognitive Decision Logs
+              <p className="text-xs text-text-muted">
+                Inspect raw Beckn Protocol JSON contracts &amp; AI Decision Logs
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-[#222] transition-colors"
+            className="p-1.5 rounded-full text-text-muted hover:text-ink hover:bg-surface-strong transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Security & Protocol Specification Banner */}
-        <div className="mx-4 mt-4 p-3 rounded-xl bg-blue-950/30 border border-blue-800/40 flex items-start gap-2.5 text-xs text-blue-200">
-          <ShieldAlert className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+        <div className="mx-5 mt-4 p-3 rounded-xl bg-canvas border border-hairline flex items-start gap-2.5 text-xs text-text-body">
+          <ShieldAlert className="w-4 h-4 text-ink shrink-0 mt-0.5" />
           <div>
-            <span className="font-semibold text-sky-300">Protocol Specification:</span> All transactions execute compliant Beckn v1.0 schema payloads. Multimodal intent and vision forensics process without exposing private citizen PII.
+            <span className="font-semibold text-ink">Protocol Specification:</span> All transactions execute compliant Beckn v1.0 schema payloads. Multimodal intent and vision forensics process without exposing private citizen PII.
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1.5 px-4 pt-3 border-b border-[#242424] bg-[#101010]">
+        <div className="flex items-center gap-1.5 px-5 pt-3 border-b border-hairline bg-white">
           <button
             onClick={() => setActiveTab('search')}
-            className={`px-3 py-1.5 text-xs font-mono font-medium rounded-t-lg transition-all ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'search'
-                ? 'bg-[#1a1a1a] text-blue-400 border-t border-x border-[#2e2e2e] font-semibold'
-                : 'text-neutral-400 hover:text-neutral-200'
+                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
+                : 'text-text-muted hover:text-ink'
             }`}
           >
             /search (Discovery)
           </button>
           <button
             onClick={() => setActiveTab('confirm')}
-            className={`px-3 py-1.5 text-xs font-mono font-medium rounded-t-lg transition-all ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'confirm'
-                ? 'bg-[#1a1a1a] text-emerald-400 border-t border-x border-[#2e2e2e] font-semibold'
-                : 'text-neutral-400 hover:text-neutral-200'
+                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
+                : 'text-text-muted hover:text-ink'
             }`}
           >
             /confirm (Order)
           </button>
           <button
             onClick={() => setActiveTab('igm')}
-            className={`px-3 py-1.5 text-xs font-mono font-medium rounded-t-lg transition-all ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'igm'
-                ? 'bg-[#1a1a1a] text-rose-400 border-t border-x border-[#2e2e2e] font-semibold'
-                : 'text-neutral-400 hover:text-neutral-200'
+                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
+                : 'text-text-muted hover:text-ink'
             }`}
           >
             /issue (Auto-IGM)
           </button>
           <button
             onClick={() => setActiveTab('telemetry')}
-            className={`px-3 py-1.5 text-xs font-mono font-medium rounded-t-lg transition-all ${
+            className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'telemetry'
-                ? 'bg-[#1a1a1a] text-amber-400 border-t border-x border-[#2e2e2e] font-semibold'
-                : 'text-neutral-400 hover:text-neutral-200'
+                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
+                : 'text-text-muted hover:text-ink'
             }`}
           >
             Telemetry Log
           </button>
         </div>
 
-        {/* JSON Code Viewer Area */}
-        <div className="flex-1 p-4 overflow-y-auto font-mono text-xs text-neutral-300 relative bg-[#0c0c0c]">
-          <div className="absolute top-6 right-6 z-10">
+        {/* JSON Code Viewer */}
+        <div className="flex-1 p-5 overflow-y-auto font-mono text-xs text-ink relative bg-canvas">
+          <div className="absolute top-7 right-7 z-10">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#222] hover:bg-[#333] border border-[#3a3a3a] text-xs text-neutral-200 transition-colors shadow-lg"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-canvas border border-hairline text-xs text-ink transition-colors shadow-sm"
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400 font-semibold">Copied</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-600 font-semibold">Copied</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5" />
+                  <Copy className="w-3.5 h-3.5 text-text-muted" />
                   <span>Copy JSON</span>
                 </>
               )}
             </button>
           </div>
 
-          <pre className="p-4 rounded-xl bg-[#141414] border border-[#242424] overflow-x-auto text-emerald-400 leading-relaxed">
+          <pre className="p-4 rounded-xl bg-white border border-hairline overflow-x-auto text-ink leading-relaxed shadow-sm">
             {JSON.stringify(currentPayload, null, 2)}
           </pre>
         </div>
 
         {/* Drawer Footer */}
-        <div className="p-3 border-t border-[#242424] bg-[#121212] flex items-center justify-between text-xs text-neutral-400 font-mono">
+        <div className="p-4 border-t border-hairline bg-white flex items-center justify-between text-xs text-text-muted font-mono">
           <span>Beckn Core v1.0.0 • Schema Validated</span>
-          <span className="text-emerald-400 font-semibold">Status: 200 ACK</span>
+          <span className="text-emerald-600 font-semibold">Status: 200 ACK</span>
         </div>
       </div>
     </div>

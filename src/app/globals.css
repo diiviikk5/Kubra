@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
 @font-face {
   font-family: 'Geist Pixel';
   font-style: normal;
@@ -7,23 +9,18 @@
        url('https://fonts.gstatic.com/s/geistpixel/v1/CSRs4zxZluGGW3oyI0A_AN0hQBvYDU4hBmqoKzAMWg.ttf') format('truetype');
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-geist-pixel: 'Geist Pixel', 'Geist Mono', monospace;
-  font-family: 'Geist Pixel', 'Geist Mono', monospace;
-  color-scheme: dark;
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
+  --font-serif: 'EB Garamond', 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-pixel: 'Geist Pixel', monospace;
+  color-scheme: light;
 }
 
 *, *::before, *::after {
-  font-family: inherit;
   box-sizing: border-box;
 }
 
@@ -32,38 +29,72 @@ html, body {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  background: #0a0a0a;
-  color: #ffffff;
-  font-family: 'Geist Pixel', 'Geist Mono', monospace;
+  background: #f5f5f5;
+  color: #0c0a09;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Allow smooth scrolling everywhere */
 html {
   scroll-behavior: smooth;
 }
 
-.font-pixel {
-  font-family: 'Geist Pixel', monospace !important;
+/* Editorial Typography */
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
-.font-geist {
-  font-family: 'Geist Pixel', 'Geist Mono', monospace;
+.font-editorial-body {
+  font-family: var(--font-sans);
+  letter-spacing: 0.012em;
 }
 
-/* Custom modern scrollbar */
+/* Atmospheric Gradient Orbs */
+.gradient-orb-mint {
+  background: radial-gradient(circle, rgba(167, 229, 211, 0.45) 0%, rgba(167, 229, 211, 0) 70%);
+}
+
+.gradient-orb-peach {
+  background: radial-gradient(circle, rgba(244, 197, 168, 0.45) 0%, rgba(244, 197, 168, 0) 70%);
+}
+
+.gradient-orb-lavender {
+  background: radial-gradient(circle, rgba(200, 184, 224, 0.45) 0%, rgba(200, 184, 224, 0) 70%);
+}
+
+.gradient-orb-sky {
+  background: radial-gradient(circle, rgba(168, 200, 232, 0.45) 0%, rgba(168, 200, 232, 0) 70%);
+}
+
+.gradient-orb-rose {
+  background: radial-gradient(circle, rgba(232, 184, 196, 0.45) 0%, rgba(232, 184, 196, 0) 70%);
+}
+
+/* Subtle Hairlines & Elevate */
+.hairline-border {
+  border: 1px solid #e7e5e4;
+}
+
+.soft-card-shadow {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f0f0f;
+  background: #f5f5f5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #282828;
+  background: #d6d3d1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #383838;
+  background: #a8a29e;
 }

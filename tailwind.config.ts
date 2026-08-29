@@ -8,21 +8,57 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['"EB Garamond"', 'Times New Roman', 'serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        pixel: ["'Geist Pixel'", 'monospace'],
+      },
       colors: {
-        ondc: {
-          blue: "#0C4A60",
-          primary: "#0B57D0",
-          accent: "#FF9933",
-          green: "#138808",
-          dark: "#0F172A",
-          card: "#1E293B",
-          border: "#334155",
-          muted: "#64748B",
+        canvas: {
+          DEFAULT: '#f5f5f5',
+          soft: '#fafafa',
+          deep: '#0c0a09',
+        },
+        surface: {
+          card: '#ffffff',
+          strong: '#f0efed',
+          dark: '#0c0a09',
+          'dark-elevated': '#1c1917',
+        },
+        hairline: {
+          DEFAULT: '#e7e5e4',
+          soft: '#f0efed',
+          strong: '#d6d3d1',
+        },
+        ink: {
+          DEFAULT: '#0c0a09',
+          primary: '#292524',
+          'primary-active': '#0c0a09',
+        },
+        text: {
+          ink: '#0c0a09',
+          body: '#4e4e4e',
+          'body-strong': '#292524',
+          muted: '#777169',
+          'muted-soft': '#a8a29e',
+        },
+        gradient: {
+          mint: '#a7e5d3',
+          peach: '#f4c5a8',
+          lavender: '#c8b8e0',
+          sky: '#a8c8e8',
+          rose: '#e8b8c4',
         }
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      boxShadow: {
+        'soft-drop': '0 4px 16px rgba(0, 0, 0, 0.04)',
+        'card-elevated': '0 8px 30px rgba(0, 0, 0, 0.06)',
       },
+      borderRadius: {
+        pill: '9999px',
+        xl: '16px',
+        xxl: '24px',
+      }
     },
   },
   plugins: [],
