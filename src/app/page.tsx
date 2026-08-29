@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { CitizenSuperlayerApp } from '@/components/CitizenSuperlayerApp';
 
 export default function LandingPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [motionPending, setMotionPending] = useState(true);
+  const [showAppView, setShowAppView] = useState(false);
+  const [initialAppTab, setInitialAppTab] = useState<'DEMO' | 'RETAIL' | 'TRANSIT' | 'DISPUTE' | 'COORDINATION' | 'JUDGE_RUBRIC'>('DEMO');
 
   useEffect(() => {
     // Guarantee video plays immediately on load
@@ -20,6 +23,20 @@ export default function LandingPage() {
     }, 2800);
     return () => clearTimeout(timer);
   }, []);
+
+  const openAppTab = (tab: 'DEMO' | 'RETAIL' | 'TRANSIT' | 'DISPUTE' | 'COORDINATION' | 'JUDGE_RUBRIC') => {
+    setInitialAppTab(tab);
+    setShowAppView(true);
+  };
+
+  if (showAppView) {
+    return (
+      <CitizenSuperlayerApp
+        initialTab={initialAppTab}
+        onClose={() => setShowAppView(false)}
+      />
+    );
+  }
 
   return (
     <main className={`fixed inset-0 bg-black text-white overflow-hidden select-none font-geist ${motionPending ? 'motion-pending' : ''}`}>
@@ -153,25 +170,37 @@ export default function LandingPage() {
           <div className="hidden md:flex items-start flex-1 font-geist">
             <nav className="flex items-start gap-[clamp(28px,2.6vw,40px)] ml-[clamp(32px,2.8vw,44px)] relative top-[10px] list-none">
               <li className="anim-nav-1">
-                <a href="#home" className="text-white font-medium text-[14px] tracking-tight relative top-[-2px]">
-                  Home
+                <button
+                  onClick={() => openAppTab('DEMO')}
+                  className="text-white font-medium text-[14px] tracking-tight relative top-[-2px] hover:opacity-80 transition-opacity"
+                >
+                  Ask India (ONDC)
                   <span className="absolute left-0 -bottom-1 w-[40px] h-[2px] bg-white/80" />
-                </a>
+                </button>
               </li>
               <li className="anim-nav-2">
-                <a href="#coordination" className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight">
+                <button
+                  onClick={() => openAppTab('COORDINATION')}
+                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight"
+                >
                   Coordination
-                </a>
+                </button>
               </li>
               <li className="anim-nav-3">
-                <a href="#retail" className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight">
+                <button
+                  onClick={() => openAppTab('RETAIL')}
+                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight"
+                >
                   DigiBazaar
-                </a>
+                </button>
               </li>
               <li className="anim-nav-4">
-                <a href="#transit" className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight">
+                <button
+                  onClick={() => openAppTab('TRANSIT')}
+                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight"
+                >
                   YatriPass
-                </a>
+                </button>
               </li>
             </nav>
 
@@ -182,9 +211,10 @@ export default function LandingPage() {
 
             <button
               type="button"
-              className="w-[109px] h-[40px] rounded-[7px] bg-white text-black font-semibold text-[14px] tracking-tight ml-[clamp(20px,1.95vw,29px)] shadow-[inset_0_1px_0_rgba(255,255,255,.72),0_1px_5px_rgba(0,0,0,.34)] hover:brightness-110 active:scale-95 transition-all anim-signup font-geist"
+              onClick={() => openAppTab('DEMO')}
+              className="w-[119px] h-[40px] rounded-[7px] bg-white text-black font-semibold text-[14px] tracking-tight ml-[clamp(20px,1.95vw,29px)] shadow-[inset_0_1px_0_rgba(255,255,255,.72),0_1px_5px_rgba(0,0,0,.34)] hover:brightness-110 active:scale-95 transition-all anim-signup font-geist"
             >
-              Sign Up
+              Launch App
             </button>
           </div>
 
@@ -239,7 +269,8 @@ export default function LandingPage() {
 
           <button
             type="button"
-            className="relative rounded-[7px] bg-white text-black shadow-[0_1px_5px_rgba(0,0,0,.38)] hover:brightness-110 active:scale-95 transition-all flex items-center anim-cta font-geist"
+            onClick={() => openAppTab('DEMO')}
+            className="relative rounded-[7px] bg-white text-black shadow-[0_1px_5px_rgba(0,0,0,.38)] hover:brightness-110 active:scale-95 transition-all flex items-center anim-cta font-geist cursor-pointer"
             style={{
               width: 'var(--cta-width)',
               height: 'var(--cta-height)',
