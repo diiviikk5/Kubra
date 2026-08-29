@@ -17,7 +17,7 @@ export default function LandingPage() {
 
     const timer = setTimeout(() => {
       setMotionPending(false);
-    }, 3200);
+    }, 2800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -34,14 +34,10 @@ export default function LandingPage() {
           --hero-bottom: clamp(34px, 5.19vh, 64px);
           --display-size: clamp(52px, 7.2vh, 84px);
           --display-leading: clamp(64px, 8.8vh, 100px);
-          --copy-size: clamp(13px, 1.6vh, 18px);
-          --copy-leading: clamp(18px, 2.1vh, 23px);
-          --title-copy-gap: clamp(15px, 2.08vh, 24px);
-          --copy-cta-gap: clamp(24px, 3.11vh, 36px);
+          --title-cta-gap: clamp(24px, 3.2vh, 38px);
           --cta-width: clamp(142px, 15.09vh, 168px);
           --cta-height: clamp(38px, 3.96vh, 44px);
           --primary-control-font-size: clamp(15px, 1.7vh, 18px);
-          --card-width: clamp(150px, 18.96vh, 215px);
         }
 
         @keyframes entrance-brand {
@@ -60,14 +56,6 @@ export default function LandingPage() {
           from { transform: translate3d(0, 110%, 0) skewY(2deg); }
           to { transform: translate3d(0, 0, 0) skewY(0deg); }
         }
-        @keyframes entrance-copy {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes entrance-card {
-          from { opacity: 0; transform: translateY(12px) scale(0.968); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
         @keyframes entrance-center {
           from { opacity: 0; transform: translate(-50%, -45%) scale(0.92); }
           to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -82,14 +70,12 @@ export default function LandingPage() {
         .motion-pending .anim-signup { animation: entrance-action 520ms cubic-bezier(.16,1,.3,1) 220ms both; }
         .motion-pending .anim-line-1 { animation: entrance-line 800ms cubic-bezier(.22,1,.36,1) 300ms both; }
         .motion-pending .anim-line-2 { animation: entrance-line 850ms cubic-bezier(.22,1,.36,1) 440ms both; }
-        .motion-pending .anim-copy { animation: entrance-copy 620ms cubic-bezier(.16,1,.3,1) 740ms both; }
-        .motion-pending .anim-cta { animation: entrance-action 560ms cubic-bezier(.16,1,.3,1) 960ms both; }
-        .motion-pending .anim-card { animation: entrance-card 920ms cubic-bezier(.22,1,.36,1) 1040ms both; transform-origin: 82% 50%; }
-        .motion-pending .anim-center { animation: entrance-center 900ms cubic-bezier(.16,1,.3,1) 500ms both; }
+        .motion-pending .anim-cta { animation: entrance-action 560ms cubic-bezier(.16,1,.3,1) 600ms both; }
+        .motion-pending .anim-center { animation: entrance-center 900ms cubic-bezier(.16,1,.3,1) 400ms both; }
       `}</style>
 
       <section className="screen-container absolute inset-0 w-full h-full bg-black overflow-hidden font-geist">
-        {/* Full-Bleed Background Video (Explicit z-0 over black container) */}
+        {/* Full-Bleed Background Video (z-0 over black container) */}
         <video
           ref={videoRef}
           style={{
@@ -114,7 +100,7 @@ export default function LandingPage() {
           />
         </video>
 
-        {/* Dual-Layer Vignette (Explicit z-1 over video) */}
+        {/* Dual-Layer Vignette (z-1 over video) */}
         <div
           style={{
             position: 'absolute',
@@ -209,15 +195,9 @@ export default function LandingPage() {
         </header>
 
         {/* 🌟 CENTERPIECE: PLAIN WHITE KUBRA IN GEIST PIXEL (z-20) */}
-        <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/15 backdrop-blur-md text-[11px] font-geist text-neutral-300 uppercase tracking-widest mb-4">
-            <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-            <span>ONDC Citizen Superlayer • Open Rails</span>
-          </div>
-
-          {/* Giant Plain White Pixel Wordmark */}
+        <div className="absolute top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
           <h1
-            className="font-pixel text-[clamp(68px,15vw,190px)] font-bold tracking-tight text-white uppercase leading-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]"
+            className="font-pixel text-[clamp(76px,16vw,200px)] font-bold tracking-tight text-white uppercase leading-none drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]"
             style={{
               fontFamily: "'Geist Pixel', 'Geist Mono', monospace",
               color: '#ffffff',
@@ -225,13 +205,9 @@ export default function LandingPage() {
           >
             KUBRA
           </h1>
-
-          <p className="font-geist text-[clamp(12px,1.4vw,16px)] text-neutral-300/80 max-w-xl mx-auto mt-3 tracking-tight">
-            &ldquo;I shouldn&apos;t need to know which app sells what. I should just be able to ask India.&rdquo;
-          </p>
         </div>
 
-        {/* Bottom-Left Hero Content (z-20) */}
+        {/* Bottom-Left Hero Content (Cleaned up, no extra copy) */}
         <div
           className="absolute flex flex-col items-start z-20 font-geist"
           style={{
@@ -253,27 +229,13 @@ export default function LandingPage() {
             </span>
           </div>
 
-          <p
-            className="font-light tracking-tight text-neutral-200/85 [text-shadow:0_1px_3px_rgba(0,0,0,.7)] anim-copy"
-            style={{
-              fontSize: 'var(--copy-size)',
-              lineHeight: 'var(--copy-leading)',
-              width: 'clamp(380px, 31.67vw, 500px)',
-              marginTop: 'var(--title-copy-gap)',
-              marginBottom: 'var(--copy-cta-gap)',
-            }}
-          >
-            Your services are scattered across a dozen portals.<br />
-            Kubra brings them into one clear signal, so every<br />
-            decision is backed by open rails you actually trust.
-          </p>
-
           <button
             type="button"
             className="relative rounded-[7px] bg-white text-black shadow-[0_1px_5px_rgba(0,0,0,.38)] hover:brightness-110 active:scale-95 transition-all flex items-center anim-cta font-geist"
             style={{
               width: 'var(--cta-width)',
               height: 'var(--cta-height)',
+              marginTop: 'var(--title-cta-gap)',
             }}
           >
             <span
@@ -289,41 +251,6 @@ export default function LandingPage() {
             </span>
           </button>
         </div>
-
-        {/* Bottom-Right Glass Demo Card (z-20) */}
-        <article
-          className="absolute rounded-[clamp(12px,1.52vh,18px)] border border-white/15 bg-gradient-to-br from-[#181614]/80 to-[#050c0e]/85 shadow-[0_2px_10px_rgba(0,0,0,.44),inset_0_0_0_3px_rgba(255,255,255,.035),0_0_0_1px_rgba(0,0,0,.9)] backdrop-blur-md backdrop-saturate-[108%] flex flex-col justify-between p-[3.5%] z-20 anim-card font-geist"
-          style={{
-            right: 'var(--gutter-end)',
-            bottom: 'var(--hero-bottom)',
-            width: 'var(--card-width)',
-            aspectRatio: '201 / 265',
-          }}
-        >
-          <div className="relative w-[93%] h-[58%] rounded-lg bg-[#101a1e] overflow-hidden mx-auto">
-            <img
-              src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500&auto=format&fit=crop&q=80"
-              alt="Abstract red and blue smoke"
-              className="w-full h-full object-cover brightness-90 saturate-95 contrast-105"
-            />
-            <button
-              type="button"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/35 bg-black/50 backdrop-blur-sm flex items-center justify-center hover:scale-105 transition-transform"
-              aria-label="Play demo"
-            >
-              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white ml-0.5">
-                <polygon points="6,3 20,12 6,21" />
-              </svg>
-            </button>
-          </div>
-
-          <button
-            type="button"
-            className="w-full h-[32%] rounded-md bg-gradient-to-br from-[#1a2224]/85 to-[#101d21]/90 border border-white/20 text-white font-normal text-xs tracking-tight flex items-center justify-center hover:brightness-110 transition-all [text-shadow:0_1px_2px_rgba(0,0,0,.6)] font-geist"
-          >
-            Watch Demo
-          </button>
-        </article>
       </section>
     </main>
   );
