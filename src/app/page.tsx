@@ -1,12 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function LandingPage() {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [motionPending, setMotionPending] = useState(true);
 
   useEffect(() => {
+    // Guarantee video plays immediately on load
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // autoplays seamlessly when muted
+      });
+    }
+
     const timer = setTimeout(() => {
       setMotionPending(false);
     }, 3200);
@@ -79,9 +87,19 @@ export default function LandingPage() {
       `}</style>
 
       <section className="screen-container absolute inset-0 w-full h-full bg-black overflow-hidden font-geist">
-        {/* Full-Bleed Background Video */}
+        {/* Full-Bleed Background Video (Explicit z-0 over black container) */}
         <video
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none -z-30"
+          ref={videoRef}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
           autoPlay
           muted
           loop
@@ -94,10 +112,13 @@ export default function LandingPage() {
           />
         </video>
 
-        {/* Dual-Layer Vignette */}
+        {/* Dual-Layer Vignette (Explicit z-1 over video) */}
         <div
-          className="absolute inset-0 pointer-events-none -z-20"
           style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 1,
             background: `
               linear-gradient(180deg, rgba(0,0,0,.03), transparent 24%, transparent 82%, rgba(0,0,0,.05)),
               radial-gradient(ellipse at 44% 54%, transparent 30%, rgba(0,0,0,.055) 100%)
@@ -105,7 +126,7 @@ export default function LandingPage() {
           }}
         />
 
-        {/* Header Bar */}
+        {/* Header Bar (z-20) */}
         <header
           className="absolute flex items-start z-20 font-geist"
           style={{
@@ -185,8 +206,8 @@ export default function LandingPage() {
           </button>
         </header>
 
-        {/* 🌟 CENTERPIECE: KUBRA IN GEIST PIXEL */}
-        <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-10 anim-center w-full px-4">
+        {/* 🌟 CENTERPIECE: KUBRA IN GEIST PIXEL (z-20) */}
+        <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 border border-white/15 backdrop-blur-md text-[11px] font-geist text-neutral-300 uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>ONDC Citizen Superlayer • Open Rails</span>
@@ -203,9 +224,9 @@ export default function LandingPage() {
           </p>
         </div>
 
-        {/* Bottom-Left Hero Content */}
+        {/* Bottom-Left Hero Content (z-20) */}
         <div
-          className="absolute flex flex-col items-start z-10 font-geist"
+          className="absolute flex flex-col items-start z-20 font-geist"
           style={{
             left: 'var(--gutter-start)',
             bottom: 'var(--hero-bottom)',
@@ -262,9 +283,9 @@ export default function LandingPage() {
           </button>
         </div>
 
-        {/* Bottom-Right Glass Demo Card */}
+        {/* Bottom-Right Glass Demo Card (z-20) */}
         <article
-          className="absolute rounded-[clamp(12px,1.52vh,18px)] border border-white/15 bg-gradient-to-br from-[#181614]/80 to-[#050c0e]/85 shadow-[0_2px_10px_rgba(0,0,0,.44),inset_0_0_0_3px_rgba(255,255,255,.035),0_0_0_1px_rgba(0,0,0,.9)] backdrop-blur-md backdrop-saturate-[108%] flex flex-col justify-between p-[3.5%] z-10 anim-card font-geist"
+          className="absolute rounded-[clamp(12px,1.52vh,18px)] border border-white/15 bg-gradient-to-br from-[#181614]/80 to-[#050c0e]/85 shadow-[0_2px_10px_rgba(0,0,0,.44),inset_0_0_0_3px_rgba(255,255,255,.035),0_0_0_1px_rgba(0,0,0,.9)] backdrop-blur-md backdrop-saturate-[108%] flex flex-col justify-between p-[3.5%] z-20 anim-card font-geist"
           style={{
             right: 'var(--gutter-end)',
             bottom: 'var(--hero-bottom)',
