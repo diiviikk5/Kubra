@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { X, Copy, Check, Terminal, ShieldAlert, Cpu, Network, Layers } from 'lucide-react';
 import { generateBecknSearchPayload, generateBecknConfirmPayload, generateBecknIGMPayload } from '@/lib/beckn-schemas';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ProtocolInspectorDrawerProps {
   isOpen: boolean;
@@ -17,6 +18,9 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
   lastAction = 'search',
   customPayload
 }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [activeTab, setActiveTab] = useState<'search' | 'confirm' | 'igm' | 'telemetry'>('search');
   const [copied, setCopied] = useState(false);
 
@@ -57,50 +61,64 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-sm flex justify-end transition-opacity font-editorial-body animate-in fade-in duration-200">
-      <div className="w-full max-w-2xl bg-white border-l border-hairline h-full flex flex-col shadow-card-elevated animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex justify-end transition-opacity font-editorial-body animate-in fade-in duration-200">
+      <div className={`w-full max-w-2xl border-l h-full flex flex-col shadow-card-elevated animate-in slide-in-from-right duration-300 ${
+        isDark ? 'bg-[#1c1917] border-[#292524] text-white' : 'bg-white border-[#e7e5e4] text-[#0c0a09]'
+      }`}>
         {/* Drawer Header */}
-        <div className="p-5 border-b border-hairline bg-canvas flex items-center justify-between">
+        <div className={`p-5 border-b flex items-center justify-between ${
+          isDark ? 'border-[#292524] bg-[#0c0a09]' : 'border-[#e7e5e4] bg-[#f5f5f5]'
+        }`}>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-ink text-white flex items-center justify-center text-xs">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs ${
+              isDark ? 'bg-white text-[#0c0a09]' : 'bg-[#0c0a09] text-white'
+            }`}>
               <Terminal className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-ink text-sm">Beckn Protocol Inspector</h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-surface-strong text-text-body border border-hairline font-mono">
+                <h3 className="font-semibold text-sm">Beckn Protocol Inspector</h3>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono ${
+                  isDark ? 'bg-[#292524] text-[#a8a29e] border-[#3f3f46]' : 'bg-[#f0efed] text-[#4e4e4e] border-[#e7e5e4]'
+                }`}>
                   v1.0.0 Spec
                 </span>
               </div>
-              <p className="text-xs text-text-muted">
+              <p className={`text-xs ${isDark ? 'text-[#a8a29e]' : 'text-[#777169]'}`}>
                 Inspect raw Beckn Protocol JSON contracts &amp; AI Decision Logs
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-text-muted hover:text-ink hover:bg-surface-strong transition-colors"
+            className={`p-1.5 rounded-full transition-colors ${
+              isDark ? 'text-[#a8a29e] hover:text-white hover:bg-[#292524]' : 'text-[#777169] hover:text-[#0c0a09] hover:bg-[#f0efed]'
+            }`}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Security & Protocol Specification Banner */}
-        <div className="mx-5 mt-4 p-3 rounded-xl bg-canvas border border-hairline flex items-start gap-2.5 text-xs text-text-body">
-          <ShieldAlert className="w-4 h-4 text-ink shrink-0 mt-0.5" />
+        <div className={`mx-5 mt-4 p-3 rounded-xl border flex items-start gap-2.5 text-xs ${
+          isDark ? 'bg-[#0c0a09] border-[#292524] text-[#a8a29e]' : 'bg-[#f5f5f5] border-[#e7e5e4] text-[#4e4e4e]'
+        }`}>
+          <ShieldAlert className={`w-4 h-4 shrink-0 mt-0.5 ${isDark ? 'text-white' : 'text-[#0c0a09]'}`} />
           <div>
-            <span className="font-semibold text-ink">Protocol Specification:</span> All transactions execute compliant Beckn v1.0 schema payloads. Multimodal intent and vision forensics process without exposing private citizen PII.
+            <span className={`font-semibold ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>Protocol Specification:</span> All transactions execute compliant Beckn v1.0 schema payloads. Multimodal intent and vision forensics process without exposing private citizen PII.
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1.5 px-5 pt-3 border-b border-hairline bg-white">
+        <div className={`flex items-center gap-1.5 px-5 pt-3 border-b ${
+          isDark ? 'border-[#292524] bg-[#1c1917]' : 'border-[#e7e5e4] bg-white'
+        }`}>
           <button
             onClick={() => setActiveTab('search')}
             className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'search'
-                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
-                : 'text-text-muted hover:text-ink'
+                ? isDark ? 'bg-[#0c0a09] text-white border-t border-x border-[#292524] font-semibold' : 'bg-[#f5f5f5] text-[#0c0a09] border-t border-x border-[#e7e5e4] font-semibold'
+                : isDark ? 'text-[#a8a29e] hover:text-white' : 'text-[#777169] hover:text-[#0c0a09]'
             }`}
           >
             /search (Discovery)
@@ -109,8 +127,8 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
             onClick={() => setActiveTab('confirm')}
             className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'confirm'
-                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
-                : 'text-text-muted hover:text-ink'
+                ? isDark ? 'bg-[#0c0a09] text-white border-t border-x border-[#292524] font-semibold' : 'bg-[#f5f5f5] text-[#0c0a09] border-t border-x border-[#e7e5e4] font-semibold'
+                : isDark ? 'text-[#a8a29e] hover:text-white' : 'text-[#777169] hover:text-[#0c0a09]'
             }`}
           >
             /confirm (Order)
@@ -119,8 +137,8 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
             onClick={() => setActiveTab('igm')}
             className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'igm'
-                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
-                : 'text-text-muted hover:text-ink'
+                ? isDark ? 'bg-[#0c0a09] text-white border-t border-x border-[#292524] font-semibold' : 'bg-[#f5f5f5] text-[#0c0a09] border-t border-x border-[#e7e5e4] font-semibold'
+                : isDark ? 'text-[#a8a29e] hover:text-white' : 'text-[#777169] hover:text-[#0c0a09]'
             }`}
           >
             /issue (Auto-IGM)
@@ -129,8 +147,8 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
             onClick={() => setActiveTab('telemetry')}
             className={`px-3 py-1.5 text-xs font-mono rounded-t-lg transition-all ${
               activeTab === 'telemetry'
-                ? 'bg-canvas text-ink border-t border-x border-hairline font-semibold'
-                : 'text-text-muted hover:text-ink'
+                ? isDark ? 'bg-[#0c0a09] text-white border-t border-x border-[#292524] font-semibold' : 'bg-[#f5f5f5] text-[#0c0a09] border-t border-x border-[#e7e5e4] font-semibold'
+                : isDark ? 'text-[#a8a29e] hover:text-white' : 'text-[#777169] hover:text-[#0c0a09]'
             }`}
           >
             Telemetry Log
@@ -138,35 +156,43 @@ export const ProtocolInspectorDrawer: React.FC<ProtocolInspectorDrawerProps> = (
         </div>
 
         {/* JSON Code Viewer */}
-        <div className="flex-1 p-5 overflow-y-auto font-mono text-xs text-ink relative bg-canvas">
+        <div className={`flex-1 p-5 overflow-y-auto font-mono text-xs relative ${
+          isDark ? 'bg-[#0c0a09] text-white' : 'bg-[#f5f5f5] text-[#0c0a09]'
+        }`}>
           <div className="absolute top-7 right-7 z-10">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-canvas border border-hairline text-xs text-ink transition-colors shadow-sm"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs transition-colors shadow-sm ${
+                isDark ? 'border-[#292524] bg-[#1c1917] hover:bg-[#292524] text-white' : 'border-[#e7e5e4] bg-white hover:bg-[#f5f5f5] text-[#0c0a09]'
+              }`}
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="text-emerald-600 font-semibold">Copied</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-500" />
+                  <span className="text-emerald-500 font-semibold">Copied</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5 text-text-muted" />
+                  <Copy className={`w-3.5 h-3.5 ${isDark ? 'text-[#a8a29e]' : 'text-[#777169]'}`} />
                   <span>Copy JSON</span>
                 </>
               )}
             </button>
           </div>
 
-          <pre className="p-4 rounded-xl bg-white border border-hairline overflow-x-auto text-ink leading-relaxed shadow-sm">
+          <pre className={`p-4 rounded-xl border overflow-x-auto leading-relaxed shadow-sm ${
+            isDark ? 'bg-[#1c1917] border-[#292524] text-emerald-400' : 'bg-white border-[#e7e5e4] text-[#0c0a09]'
+          }`}>
             {JSON.stringify(currentPayload, null, 2)}
           </pre>
         </div>
 
         {/* Drawer Footer */}
-        <div className="p-4 border-t border-hairline bg-white flex items-center justify-between text-xs text-text-muted font-mono">
+        <div className={`p-4 border-t flex items-center justify-between text-xs font-mono ${
+          isDark ? 'border-[#292524] bg-[#0c0a09] text-[#78716c]' : 'border-[#e7e5e4] bg-white text-[#777169]'
+        }`}>
           <span>Beckn Core v1.0.0 • Schema Validated</span>
-          <span className="text-emerald-600 font-semibold">Status: 200 ACK</span>
+          <span className="text-emerald-500 font-semibold">Status: 200 ACK</span>
         </div>
       </div>
     </div>
