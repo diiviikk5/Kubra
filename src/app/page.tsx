@@ -24,7 +24,14 @@ export default function LandingPage() {
   return (
     <main className={`fixed inset-0 bg-black text-white overflow-hidden select-none font-geist ${motionPending ? 'motion-pending' : ''}`}>
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=Tiny5&family=Geist+Mono:wght@300;400;500;600;700;800;900&display=swap');
+        @font-face {
+          font-family: 'Geist Pixel';
+          font-style: normal;
+          font-weight: 400 900;
+          font-display: block;
+          src: url('/fonts/GeistPixel-Regular.ttf') format('truetype'),
+               url('https://fonts.gstatic.com/s/geistpixel/v1/CSRs4zxZluGGW3oyI0A_AN0hQBvYDU4hBmqoKzAMWg.ttf') format('truetype');
+        }
 
         /* Desktop Tokens */
         .screen-container {
@@ -194,15 +201,14 @@ export default function LandingPage() {
           </button>
         </header>
 
-        {/* 🌟 CENTERPIECE: SEAMLESS AUTHENTIC PIXEL KUBRA (z-20) */}
+        {/* 🌟 CENTERPIECE: EXACT GEIST PIXEL KUBRA (z-20) */}
         <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
           <h1
-            className="font-pixel text-[clamp(80px,18vw,230px)] font-bold tracking-[0.06em] text-white uppercase leading-none drop-shadow-[0_12px_40px_rgba(0,0,0,0.98)] select-none"
+            className="text-[clamp(80px,18vw,240px)] text-white uppercase leading-none drop-shadow-[0_12px_40px_rgba(0,0,0,0.98)] select-none"
             style={{
-              fontFamily: "'Pixelify Sans', 'Silkscreen', 'Tiny5', monospace",
+              fontFamily: "'Geist Pixel', monospace",
               color: '#ffffff',
-              imageRendering: 'pixelated',
-              WebkitFontSmoothing: 'none',
+              letterSpacing: '0.04em',
             }}
           >
             KUBRA

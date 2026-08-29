@@ -1,12 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=Tiny5&family=Geist+Mono:wght@300;400;500;600;700;800;900&display=swap');
+@font-face {
+  font-family: 'Geist Pixel';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: block;
+  src: url('/fonts/GeistPixel-Regular.ttf') format('truetype'),
+       url('https://fonts.gstatic.com/s/geistpixel/v1/CSRs4zxZluGGW3oyI0A_AN0hQBvYDU4hBmqoKzAMWg.ttf') format('truetype');
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-geist-pixel: 'Pixelify Sans', 'Silkscreen', 'Geist Mono', monospace;
-  font-family: var(--font-geist-pixel);
+  --font-geist-pixel: 'Geist Pixel', 'Geist Mono', monospace;
+  font-family: 'Geist Pixel', 'Geist Mono', monospace;
   color-scheme: dark;
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
@@ -25,24 +34,18 @@ html, body {
   overflow: hidden;
   background: #000000;
   color: #ffffff;
-  font-family: 'Pixelify Sans', 'Silkscreen', 'Geist Mono', monospace;
+  font-family: 'Geist Pixel', 'Geist Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
 }
 
-/* Seamless Pixel Typography */
 .font-pixel {
-  font-family: 'Pixelify Sans', 'Silkscreen', monospace;
-  letter-spacing: 0.04em;
-  image-rendering: pixelated;
-  text-rendering: geometricPrecision;
-  -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: unset;
+  font-family: 'Geist Pixel', monospace !important;
 }
 
 .font-geist {
-  font-family: 'Geist Mono', monospace;
+  font-family: 'Geist Pixel', 'Geist Mono', monospace;
 }
 
 /* Custom scrollbar */
