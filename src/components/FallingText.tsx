@@ -21,9 +21,14 @@ export const FallingText: React.FC<FallingTextProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLCanvasElement>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current || !sceneRef.current) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !containerRef.current || !sceneRef.current) return;
 
     const {
       Engine,
@@ -48,7 +53,7 @@ export const FallingText: React.FC<FallingTextProps> = ({
     });
     const world = engine.world;
 
-    // 2. Create Custom Renderer or use Matter Render
+    // 2. Create Renderer
     const render = Render.create({
       canvas: canvas,
       engine: engine,
@@ -100,11 +105,11 @@ export const FallingText: React.FC<FallingTextProps> = ({
       const y = -60 - index * 60;
       const body = Bodies.rectangle(x, y, item.w, item.h, {
         chamfer: { radius: item.radius },
-        restitution: 0.75, // Bouncy!
+        restitution: 0.75,
         friction: 0.15,
         density: 0.001,
         angle: (Math.random() - 0.5) * 0.4,
-        render: { visible: false }, // we draw in custom render loop for high-res text
+        render: { visible: false },
       });
 
       bodies.push({ body, item });
@@ -125,7 +130,7 @@ export const FallingText: React.FC<FallingTextProps> = ({
       render.mouse = mouse;
     }
 
-    // 7. Custom High-DPI Canvas Text Render Loop (React Bits Style)
+    // 7. Custom High-DPI Canvas Text Render Loop
     let animationFrameId: number;
     const ctx = canvas.getContext('2d');
 
@@ -197,7 +202,15 @@ export const FallingText: React.FC<FallingTextProps> = ({
       Composite.clear(world, false);
       Engine.clear(engine);
     };
-  }, [gravity, interactive]);
+  }, [gravity, interactive, mounted]);
+
+  if (!mounted) {
+    return (
+      <div className={`relative w-full h-[400px] sm:h-[480px] bg-[#121212] rounded-3xl flex items-center justify-center ${className}`}>
+        <span className="text-sm font-mono text-neutral-500">Loading physics engine...</span>
+      </div>
+    );
+  }
 
   return (
     <div
