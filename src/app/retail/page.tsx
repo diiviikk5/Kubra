@@ -22,7 +22,7 @@ export default function RetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen w-full bg-[#0a0a0a] text-neutral-100 flex flex-col font-geist overflow-y-auto pb-20">
       <Navbar
         lang={lang}
         onLangToggle={() => setLang(lang === 'en' ? 'hi' : 'en')}
@@ -32,20 +32,20 @@ export default function RetailPage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white mb-2">
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to Citizen Hub
+            <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white mb-2 transition-colors">
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to Superlayer Home
             </Link>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-              {lang === 'hi' ? 'किराना एवं डिजिकैटलॉग लाइव' : 'Retail & DigiCatalog Engine'}
+              {lang === 'hi' ? 'किराना एवं डिजिकैटलॉग लाइव' : 'DigiBazaar Retail & Kirana Matrix'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400">
-              Solving ONDC &quot;The Wall&quot;: Real-time shelf OCR inventory sync and price benchmarking against quick-commerce dark stores.
+            <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
+              Real-time shelf inventory sync and transparent landed price comparison vs quick-commerce dark stores.
             </p>
           </div>
 
           <button
             onClick={() => setIsShelfScanOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all self-start sm:self-auto"
+            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all self-start sm:self-auto cursor-pointer"
           >
             <Camera className="w-4 h-4" />
             <span>Open Kirana Shelf Scanner</span>

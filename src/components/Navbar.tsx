@@ -3,106 +3,99 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, Train, ShieldCheck, Terminal, Globe, Zap, Users, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Train, ShieldCheck, Terminal, Globe, Zap, Users } from 'lucide-react';
 
 interface NavbarProps {
   lang: 'en' | 'hi';
   onLangToggle: () => void;
   onOpenInspector: () => void;
-  inspectorCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   lang,
   onLangToggle,
   onOpenInspector,
-  inspectorCount = 1
 }) => {
   const pathname = usePathname();
 
   const navItems = [
     {
       href: '/',
-      labelEn: 'Citizen Hub',
+      labelEn: 'Citizen Superlayer',
       labelHi: 'नागरिक हब',
       icon: Zap
     },
     {
-      href: '/coordination',
-      labelEn: 'Citizen Coordination',
-      labelHi: 'सामूहिक समन्वय',
-      icon: Users,
-      badge: 'Voter Power'
-    },
-    {
       href: '/retail',
-      labelEn: 'Retail & DigiCatalog',
+      labelEn: 'DigiBazaar Retail',
       labelHi: 'किराना एवं डिजिकैटलॉग',
-      icon: ShoppingBag,
-      badge: 'Solves "The Wall"'
+      icon: ShoppingBag
     },
     {
       href: '/transit',
       labelEn: 'YatriSetu Transit',
       labelHi: 'यात्रीसेतु ट्रांजिट',
-      icon: Train,
-      badge: '1-QR Multi-Modal'
+      icon: Train
     },
     {
       href: '/dispute',
-      labelEn: '60s IGM Resolve',
+      labelEn: '60s Auto-Dispute',
       labelHi: '६० सेकंड रिफंड',
-      icon: ShieldCheck,
-      badge: 'Auto-Refund'
+      icon: ShieldCheck
+    },
+    {
+      href: '/coordination',
+      labelEn: 'Civic Quorum',
+      labelHi: 'सामूहिक समन्वय',
+      icon: Users
     }
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-800 bg-slate-950/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-[#222] bg-[#121212]/95 backdrop-blur-md font-geist">
       {/* Top Protocol Status Ticker */}
-      <div className="bg-gradient-to-r from-blue-950 via-slate-900 to-amber-950 px-4 py-1 text-xs text-slate-300 border-b border-slate-800/80 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-blue-950/60 via-[#141414] to-emerald-950/60 px-4 py-1 text-xs text-neutral-300 border-b border-[#222] flex items-center justify-between font-mono">
         <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
-          <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span className="font-mono text-amber-300 font-semibold">KUBRA CITIZEN NETWORK:</span>
-          <span className="text-slate-300">Coordination &gt; Passive Tracking</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-slate-300">500 orders/min</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-emerald-400 font-medium">9 Metros & 21 Bus Cities Connected</span>
+          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="text-emerald-400 font-semibold">ONDC DECENTRALIZED RAILS:</span>
+          <span className="text-neutral-300">2,400+ Local &amp; National Seller NPs Active</span>
+          <span className="text-neutral-600">|</span>
+          <span className="text-neutral-300">std:022 Mumbai Node</span>
+          <span className="text-neutral-600">|</span>
+          <span className="text-sky-400">9 Metros &amp; 21 Bus Networks</span>
         </div>
-        <div className="hidden md:flex items-center gap-3">
-          <span className="text-slate-400 text-[11px]">DPIIT ONDC Rails • Beckn v1.0 • Civic Quorum Engine</span>
+        <div className="hidden md:flex items-center gap-3 text-neutral-400 text-[11px]">
+          <span>DPIIT Digital Public Infrastructure • Beckn v1.0.0</span>
         </div>
       </div>
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-4">
           {/* Brand Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 via-blue-600 to-emerald-500 p-0.5 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-white to-emerald-400 text-lg">
-                  कु
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-amber-400 to-rose-500 p-0.5 shadow-md group-hover:scale-105 transition-transform">
+                <div className="w-full h-full bg-[#121212] rounded-[10px] flex items-center justify-center font-bold text-white text-base">
+                  K
                 </div>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-lg tracking-tight text-white">Kubra</span>
-                  <span className="font-bold text-lg text-amber-400">ONDC</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono font-medium">
-                    CivicOS
+                  <span className="font-bold text-lg tracking-tight text-white">Kubra</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono font-medium">
+                    ONDC Core
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400 -mt-1 font-medium">
-                  {lang === 'hi' ? 'नागरिक समन्वय एवं खुला डिजिटल नेटवर्क' : 'Citizen Coordination Superlayer for Bharat'}
+                <p className="text-[10px] text-neutral-400 -mt-1 font-medium hidden sm:block">
+                  {lang === 'hi' ? 'नागरिक खुला वाणिज्य नेटवर्क' : 'Open Commerce Superlayer for Bharat'}
                 </p>
               </div>
             </Link>
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -110,52 +103,46 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                     isActive
-                      ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-neutral-300 hover:text-white hover:bg-[#202020]'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-400' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-neutral-400'}`} />
                   <span>{lang === 'hi' ? item.labelHi : item.labelEn}</span>
-                  {item.badge && (
-                    <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-amber-300 border border-slate-700 font-mono">
-                      {item.badge}
-                    </span>
-                  )}
                 </Link>
               );
             })}
           </nav>
 
           {/* Right Action Controls */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Language Switcher */}
             <button
               onClick={onLangToggle}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-xs font-semibold text-slate-200 transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#333] bg-[#181818] hover:bg-[#242424] text-xs font-mono text-neutral-200 transition-colors shadow-sm"
               title="Toggle English / हिन्दी"
             >
               <Globe className="w-3.5 h-3.5 text-amber-400" />
-              <span>{lang === 'en' ? 'हिन्दी' : 'English'}</span>
+              <span>{lang === 'en' ? 'हिन्दी' : 'EN'}</span>
             </button>
 
-            {/* Protocol Inspector Drawer Trigger for Hackathon Judges */}
+            {/* Protocol Inspector */}
             <button
               onClick={onOpenInspector}
-              className="relative flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/50 text-xs font-mono font-semibold text-emerald-300 transition-all shadow-sm shadow-emerald-950"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/50 text-xs font-mono font-semibold text-emerald-300 transition-all shadow-sm"
             >
               <Terminal className="w-3.5 h-3.5 text-emerald-400" />
               <span className="hidden sm:inline">Beckn Inspector</span>
               <span className="sm:hidden">Inspect</span>
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Sub-Navigation Bar */}
-      <div className="md:hidden flex items-center justify-around border-t border-slate-800/80 bg-slate-950 px-2 py-2 overflow-x-auto">
+      <div className="lg:hidden flex items-center justify-around border-t border-[#222] bg-[#141414] px-2 py-2 overflow-x-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -164,7 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium whitespace-nowrap ${
-                isActive ? 'text-amber-400 bg-amber-500/10' : 'text-slate-400'
+                isActive ? 'text-blue-400 bg-blue-500/10' : 'text-neutral-400'
               }`}
             >
               <Icon className="w-4 h-4" />

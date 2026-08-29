@@ -12,7 +12,7 @@ export default function TransitPage() {
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen w-full bg-[#0a0a0a] text-neutral-100 flex flex-col font-geist overflow-y-auto pb-20">
       <Navbar
         lang={lang}
         onLangToggle={() => setLang(lang === 'en' ? 'hi' : 'en')}
@@ -21,14 +21,14 @@ export default function TransitPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <div>
-          <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white mb-2">
-            <ArrowLeft className="w-3.5 h-3.5" /> Back to Citizen Hub
+          <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white mb-2 transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to Superlayer Home
           </Link>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-            {lang === 'hi' ? 'यात्रीसेतु: एकीकृत बहु-मॉडल पास' : 'YatriSetu: One-Pass Dynamic Transit'}
+            {lang === 'hi' ? 'यात्रीसेतु: एकीकृत बहु-मॉडल पास' : 'YatriSetu: One-Pass Dynamic Multimodal Transit'}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400">
-            Unifying 9 Metros (Mumbai, Delhi, Bangalore, Kochi), BEST/DTC buses, and Bharat Taxi with real-time delay auto-recovery.
+          <p className="text-xs sm:text-sm text-neutral-400 mt-0.5">
+            Unifying 9 Indian Metros (Mumbai, Delhi, Bangalore, Kochi), BEST/DTC city buses, and Bharat Taxi with real-time delay auto-recovery.
           </p>
         </div>
 

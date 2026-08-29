@@ -8,7 +8,7 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [motionPending, setMotionPending] = useState(true);
   const [showAppView, setShowAppView] = useState(false);
-  const [initialAppTab, setInitialAppTab] = useState<'DEMO' | 'RETAIL' | 'TRANSIT' | 'DISPUTE' | 'COORDINATION' | 'JUDGE_RUBRIC'>('DEMO');
+  const [initialAppTab, setInitialAppTab] = useState<'SEARCH' | 'RETAIL' | 'TRANSIT' | 'DISPUTE' | 'COORDINATION' | 'ARCHITECTURE'>('SEARCH');
 
   useEffect(() => {
     // Guarantee video plays immediately on load
@@ -24,7 +24,7 @@ export default function LandingPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const openAppTab = (tab: 'DEMO' | 'RETAIL' | 'TRANSIT' | 'DISPUTE' | 'COORDINATION' | 'JUDGE_RUBRIC') => {
+  const openAppTab = (tab: 'SEARCH' | 'RETAIL' | 'TRANSIT' | 'DISPUTE' | 'COORDINATION' | 'ARCHITECTURE') => {
     setInitialAppTab(tab);
     setShowAppView(true);
   };
@@ -171,25 +171,25 @@ export default function LandingPage() {
             <nav className="flex items-start gap-[clamp(28px,2.6vw,40px)] ml-[clamp(32px,2.8vw,44px)] relative top-[10px] list-none">
               <li className="anim-nav-1">
                 <button
-                  onClick={() => openAppTab('DEMO')}
-                  className="text-white font-medium text-[14px] tracking-tight relative top-[-2px] hover:opacity-80 transition-opacity"
+                  onClick={() => openAppTab('SEARCH')}
+                  className="text-white font-medium text-[14px] tracking-tight relative top-[-2px] hover:opacity-80 transition-opacity cursor-pointer"
                 >
-                  Ask India (ONDC)
+                  Universal Search
                   <span className="absolute left-0 -bottom-1 w-[40px] h-[2px] bg-white/80" />
                 </button>
               </li>
               <li className="anim-nav-2">
                 <button
                   onClick={() => openAppTab('COORDINATION')}
-                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight"
+                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight cursor-pointer"
                 >
-                  Coordination
+                  Civic Quorum
                 </button>
               </li>
               <li className="anim-nav-3">
                 <button
                   onClick={() => openAppTab('RETAIL')}
-                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight"
+                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight cursor-pointer"
                 >
                   DigiBazaar
                 </button>
@@ -197,7 +197,7 @@ export default function LandingPage() {
               <li className="anim-nav-4">
                 <button
                   onClick={() => openAppTab('TRANSIT')}
-                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight"
+                  className="text-neutral-300 hover:text-white transition-colors text-[14px] tracking-tight cursor-pointer"
                 >
                   YatriPass
                 </button>
@@ -211,8 +211,8 @@ export default function LandingPage() {
 
             <button
               type="button"
-              onClick={() => openAppTab('DEMO')}
-              className="w-[119px] h-[40px] rounded-[7px] bg-white text-black font-semibold text-[14px] tracking-tight ml-[clamp(20px,1.95vw,29px)] shadow-[inset_0_1px_0_rgba(255,255,255,.72),0_1px_5px_rgba(0,0,0,.34)] hover:brightness-110 active:scale-95 transition-all anim-signup font-geist"
+              onClick={() => openAppTab('SEARCH')}
+              className="w-[119px] h-[40px] rounded-[7px] bg-white text-black font-semibold text-[14px] tracking-tight ml-[clamp(20px,1.95vw,29px)] shadow-[inset_0_1px_0_rgba(255,255,255,.72),0_1px_5px_rgba(0,0,0,.34)] hover:brightness-110 active:scale-95 transition-all anim-signup font-geist cursor-pointer"
             >
               Launch App
             </button>
@@ -269,7 +269,7 @@ export default function LandingPage() {
 
           <button
             type="button"
-            onClick={() => openAppTab('DEMO')}
+            onClick={() => openAppTab('SEARCH')}
             className="relative rounded-[7px] bg-white text-black shadow-[0_1px_5px_rgba(0,0,0,.38)] hover:brightness-110 active:scale-95 transition-all flex items-center anim-cta font-geist cursor-pointer"
             style={{
               width: 'var(--cta-width)',
