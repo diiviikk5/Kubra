@@ -44,13 +44,14 @@ import { PaymentGatewayModal } from '@/components/PaymentGatewayModal';
 import { ShelfScannerModal } from '@/components/ShelfScannerModal';
 import { MultimodalTicketPass } from '@/components/MultimodalTicketPass';
 import { DisputeEvidenceAuditor } from '@/components/DisputeEvidenceAuditor';
+import { AgenticCommerceSuite } from '@/components/AgenticCommerceSuite';
 import { INITIAL_PRODUCTS, ProductItem } from '@/lib/mock-data';
 import { useTheme } from '@/context/ThemeContext';
 import confetti from 'canvas-confetti';
 
 interface CitizenSuperlayerAppProps {
   onClose?: () => void;
-  initialTab?: 'COMMERCE' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY';
+  initialTab?: 'COMMERCE' | 'AGENTIC' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY';
 }
 
 export const CitizenSuperlayerApp: React.FC<CitizenSuperlayerAppProps> = ({
@@ -60,7 +61,7 @@ export const CitizenSuperlayerApp: React.FC<CitizenSuperlayerAppProps> = ({
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
 
-  const [activeTab, setActiveTab] = useState<'COMMERCE' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'COMMERCE' | 'AGENTIC' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY'>(initialTab);
   const [lang, setLang] = useState<'en' | 'hi'>('en');
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isShelfScanOpen, setIsShelfScanOpen] = useState(false);
@@ -177,6 +178,17 @@ export const CitizenSuperlayerApp: React.FC<CitizenSuperlayerAppProps> = ({
               Universal Commerce
             </button>
             <button
+              onClick={() => setActiveTab('AGENTIC')}
+              className={`px-4 py-1.5 rounded-full transition-all flex items-center gap-1.5 ${
+                activeTab === 'AGENTIC'
+                  ? isDark ? 'bg-white text-[#0c0a09] shadow-sm font-semibold' : 'bg-[#0c0a09] text-white shadow-sm font-semibold'
+                  : isDark ? 'text-[#a8a29e] hover:text-white' : 'text-[#777169] hover:text-[#0c0a09]'
+              }`}
+            >
+              <span>Agentic AI</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-500 font-mono font-semibold">Track 01</span>
+            </button>
+            <button
               onClick={() => setActiveTab('TRANSIT')}
               className={`px-4 py-1.5 rounded-full transition-all ${
                 activeTab === 'TRANSIT'
@@ -264,6 +276,12 @@ export const CitizenSuperlayerApp: React.FC<CitizenSuperlayerAppProps> = ({
             className={`px-3 py-1 rounded-full shrink-0 ${activeTab === 'COMMERCE' ? (isDark ? 'bg-white text-[#0c0a09]' : 'bg-[#0c0a09] text-white') : (isDark ? 'text-[#a8a29e]' : 'text-[#777169]')}`}
           >
             Universal Commerce
+          </button>
+          <button
+            onClick={() => setActiveTab('AGENTIC')}
+            className={`px-3 py-1 rounded-full shrink-0 ${activeTab === 'AGENTIC' ? (isDark ? 'bg-white text-[#0c0a09]' : 'bg-[#0c0a09] text-white') : (isDark ? 'text-[#a8a29e]' : 'text-[#777169]')}`}
+          >
+            Agentic AI
           </button>
           <button
             onClick={() => setActiveTab('TRANSIT')}
@@ -826,6 +844,13 @@ export const CitizenSuperlayerApp: React.FC<CitizenSuperlayerAppProps> = ({
               </div>
             ) : null}
           </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB: AGENTIC COMMERCE & AI GROWTH (TRACK 01) */}
+        {/* ========================================================================= */}
+        {activeTab === 'AGENTIC' && (
+          <AgenticCommerceSuite />
         )}
 
         {/* ========================================================================= */}

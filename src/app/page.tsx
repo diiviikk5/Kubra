@@ -8,7 +8,7 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [motionPending, setMotionPending] = useState(true);
   const [showAppView, setShowAppView] = useState(false);
-  const [initialAppTab, setInitialAppTab] = useState<'COMMERCE' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY'>('COMMERCE');
+  const [initialAppTab, setInitialAppTab] = useState<'COMMERCE' | 'AGENTIC' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY'>('COMMERCE');
 
   useEffect(() => {
     // Guarantee video plays immediately on load
@@ -24,7 +24,7 @@ export default function LandingPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const openAppTab = (tab: 'COMMERCE' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY') => {
+  const openAppTab = (tab: 'COMMERCE' | 'AGENTIC' | 'TRANSIT' | 'DISPUTE' | 'TRANSPARENCY') => {
     setInitialAppTab(tab);
     setShowAppView(true);
   };
@@ -176,6 +176,15 @@ export default function LandingPage() {
                 >
                   Universal Commerce
                   <span className="absolute left-0 -bottom-1 w-[40px] h-[2px] bg-white/80" />
+                </button>
+              </li>
+              <li className="anim-nav-2">
+                <button
+                  onClick={() => openAppTab('AGENTIC')}
+                  className="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors text-[14px] tracking-tight cursor-pointer flex items-center gap-1"
+                >
+                  <span>Agentic AI</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Track 01</span>
                 </button>
               </li>
               <li className="anim-nav-2">

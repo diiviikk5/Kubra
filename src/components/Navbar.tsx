@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, Train, ShieldCheck, Terminal, Globe, Zap, Users, Sun, Moon } from 'lucide-react';
+import { ShoppingBag, Train, ShieldCheck, Terminal, Globe, Zap, Users, Sun, Moon, Bot } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
 interface NavbarProps {
@@ -27,6 +27,12 @@ export const Navbar: React.FC<NavbarProps> = ({
       labelEn: 'Superlayer',
       labelHi: 'नागरिक हब',
       icon: Zap
+    },
+    {
+      href: '/agentic',
+      labelEn: 'Agentic AI',
+      labelHi: 'एजेंटिक एआई',
+      icon: Bot
     },
     {
       href: '/retail',
