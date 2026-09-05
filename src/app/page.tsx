@@ -231,7 +231,7 @@ export default function LandingPage() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden ml-auto w-11 h-11 rounded-xl border border-white/20 bg-neutral-900/80 backdrop-blur-md flex flex-col items-center justify-center gap-1.5"
+            className="md:hidden ml-auto w-11 h-11 rounded-xl border border-white/20 bg-neutral-900/80 backdrop-blur-md flex flex-col items-center justify-center gap-1.5 z-40"
             aria-label="Toggle menu"
           >
             <span className={`w-5 h-0.5 bg-white transition-transform ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
@@ -239,6 +239,55 @@ export default function LandingPage() {
             <span className={`w-5 h-0.5 bg-white transition-transform ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
           </button>
         </header>
+
+        {/* Mobile Fullscreen Drawer Overlay */}
+        {menuOpen && (
+          <div className="md:hidden fixed inset-0 z-30 bg-black/95 backdrop-blur-xl flex flex-col p-6 pt-24 space-y-4 animate-in fade-in duration-200 font-editorial-body overflow-y-auto">
+            <div className="text-xs font-mono uppercase text-neutral-400 tracking-wider">
+              Explore Kubra Rails
+            </div>
+            <div className="space-y-2">
+              <button
+                onClick={() => { setMenuOpen(false); openAppTab('COMMERCE'); }}
+                className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 text-left text-sm font-medium flex items-center justify-between text-white"
+              >
+                <span>Universal Commerce</span>
+                <span className="text-xs text-neutral-400">&rarr;</span>
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); openAppTab('AGENTIC'); }}
+                className="w-full p-4 rounded-2xl bg-neutral-900 border border-emerald-800/80 text-left text-sm font-medium flex items-center justify-between text-emerald-400"
+              >
+                <div className="flex items-center gap-2">
+                  <span>Agentic AI Workstation</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">Track 01</span>
+                </div>
+                <span className="text-xs text-emerald-400">&rarr;</span>
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); openAppTab('TRANSIT'); }}
+                className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 text-left text-sm font-medium flex items-center justify-between text-white"
+              >
+                <span>YatriPass Multimodal Transit</span>
+                <span className="text-xs text-neutral-400">&rarr;</span>
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); openAppTab('DISPUTE'); }}
+                className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 text-left text-sm font-medium flex items-center justify-between text-white"
+              >
+                <span>60-Second Auto-Refund</span>
+                <span className="text-xs text-neutral-400">&rarr;</span>
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); openAppTab('TRANSPARENCY'); }}
+                className="w-full p-4 rounded-2xl bg-neutral-900 border border-neutral-800 text-left text-sm font-medium flex items-center justify-between text-white"
+              >
+                <span>System Specifications</span>
+                <span className="text-xs text-neutral-400">&rarr;</span>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* 🌟 CENTERPIECE: EXACT GEIST PIXEL KUBRA (z-20) */}
         <div className="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20 anim-center w-full px-4">
