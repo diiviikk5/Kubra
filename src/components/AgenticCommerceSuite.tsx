@@ -28,7 +28,10 @@ import {
   Check,
   Sliders,
   DollarSign,
-  Plus
+  Plus,
+  Play,
+  RefreshCw,
+  SlidersHorizontal
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import confetti from 'canvas-confetti';
@@ -44,11 +47,47 @@ export const AgenticCommerceSuite: React.FC = () => {
     computeUpsellRecommendations(['prod-001'])
   );
 
+  // Dynamic Mandate Threshold State
+  const [autonomousThreshold, setAutonomousThreshold] = useState<number>(500);
+
+  // Synthetic AI Buyer Simulation State
+  const [selectedAgentType, setSelectedAgentType] = useState<'claude' | 'autogpt' | 'perplexity'>('claude');
+  const [isHandshaking, setIsHandshaking] = useState(false);
+  const [handshakeResult, setHandshakeResult] = useState<{
+    protocol: string;
+    status: string;
+    receiptId: string;
+    orderId: string;
+    amountINR: number;
+    latencyMs: number;
+  } | null>(null);
+
   const handleAddUpsellToBasket = (rec: UpsellRecommendation) => {
     setBasket((prev) => [...prev, rec.recommendedSkuId]);
     const updatedRecs = computeUpsellRecommendations([...basket, rec.recommendedSkuId]);
     setRecommendations(updatedRecs);
     confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
+  };
+
+  const handleRunAgentHandshake = () => {
+    setIsHandshaking(true);
+    const startTime = performance.now();
+
+    setTimeout(() => {
+      const latency = Math.round(performance.now() - startTime + 80);
+      const isAutonomous = 387 <= autonomousThreshold;
+
+      setHandshakeResult({
+        protocol: 'AP2/1.1 (x402-Razorpay)',
+        status: isAutonomous ? 'EXECUTED_AUTONOMOUS (Zero-Touch)' : 'GATED_APPROVAL_REQUIRED (Human Consent Prompted)',
+        receiptId: `rcpt_ap2_${Date.now().toString().slice(-6)}`,
+        orderId: `order_rzp_${Date.now().toString().slice(-8)}`,
+        amountINR: 387.00,
+        latencyMs: latency
+      });
+      setIsHandshaking(false);
+      confetti({ particleCount: 45, spread: 50, origin: { y: 0.6 } });
+    }, 700);
   };
 
   return (
@@ -388,20 +427,48 @@ export const AgenticCommerceSuite: React.FC = () => {
               <AgentConversationalCheckout />
             </div>
 
-            {/* Right 5 cols: Bounded Mandate Controls */}
+            {/* Right 5 cols: Bounded Mandate Controls & Synthetic Handshake Simulator */}
             <div className="lg:col-span-5 space-y-4">
+              {/* Dynamic Mandate Slider */}
               <div
                 className={`p-6 rounded-2xl border transition-colors duration-300 space-y-4 ${
                   isDark ? 'bg-[#1c1917] border-[#292524]' : 'bg-white border-[#e7e5e4] soft-card-shadow'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-emerald-500" />
-                  <h4 className="text-sm font-semibold">Active UPI AutoPay Bounded Mandate</h4>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-emerald-500" />
+                    <h4 className="text-sm font-semibold">Bounded Policy Controls</h4>
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-500 font-bold">
+                    UPI AutoPay Active
+                  </span>
+                </div>
+
+                {/* Slider */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-mono">
+                    <span className="text-text-muted">Autonomous Threshold:</span>
+                    <strong className="text-emerald-500 font-bold">₹{autonomousThreshold}.00</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="200"
+                    max="1000"
+                    step="50"
+                    value={autonomousThreshold}
+                    onChange={(e) => setAutonomousThreshold(Number(e.target.value))}
+                    className="w-full accent-emerald-500 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-[#777169]">
+                    <span>₹200 (Tight)</span>
+                    <span>₹500 (Default)</span>
+                    <span>₹1,000 (Max Cap)</span>
+                  </div>
                 </div>
 
                 <div
-                  className={`p-4 rounded-xl border font-mono text-xs space-y-2 ${
+                  className={`p-3.5 rounded-xl border font-mono text-xs space-y-1.5 ${
                     isDark ? 'bg-[#0c0a09] border-[#292524] text-[#a8a29e]' : 'bg-[#f5f5f5] border-[#e7e5e4] text-[#4e4e4e]'
                   }`}
                 >
@@ -412,48 +479,124 @@ export const AgenticCommerceSuite: React.FC = () => {
                     </strong>
                   </div>
                   <div className="flex justify-between">
-                    <span>Max Limit Per Txn:</span>
-                    <strong className="text-emerald-500">
-                      ₹{DEFAULT_BUYER_MANDATE.maxAmountPerTxn.toFixed(2)}
-                    </strong>
+                    <span>Hard Cap Limit:</span>
+                    <strong className="text-emerald-500">₹1,000.00 / txn</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span>Autonomous Threshold:</span>
-                    <strong className="text-sky-500">
-                      &lt; ₹{DEFAULT_BUYER_MANDATE.autonomousThreshold.toFixed(2)} (Zero-Touch)
-                    </strong>
+                    <span>Zero-Touch Range:</span>
+                    <strong className="text-sky-500">&lt; ₹{autonomousThreshold}.00</strong>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Daily Cap Remaining:</span>
-                    <strong className={isDark ? 'text-white' : 'text-[#0c0a09]'}>
-                      ₹{(DEFAULT_BUYER_MANDATE.dailySpendingCap - DEFAULT_BUYER_MANDATE.dailySpentSoFar).toFixed(2)}
-                    </strong>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-xs text-text-muted leading-relaxed">
-                  <span className="font-semibold text-text-body">Mandate Enforcement Rules:</span>
-                  <ul className="list-disc list-inside space-y-1 text-[11px]">
-                    <li>Transactions under ₹500 execute with zero human friction.</li>
-                    <li>Transactions ≥ ₹500 pause the autonomous loop for biometric/OTP approval.</li>
-                    <li>Hard cap at ₹1,000 blocks rogue overspending.</li>
-                  </ul>
                 </div>
               </div>
 
-              {/* x402 Protocol Challenge Card */}
+              {/* Synthetic AI Buyer Handshake Simulator */}
               <div
-                className={`p-6 rounded-2xl border space-y-2 ${
+                className={`p-6 rounded-2xl border transition-colors duration-300 space-y-4 ${
                   isDark ? 'bg-[#1c1917] border-[#292524]' : 'bg-white border-[#e7e5e4] soft-card-shadow'
                 }`}
               >
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-[#777169]">HTTP 402 PAYMENT REQUIRED PROTOCOL</span>
-                  <span className="text-emerald-500 font-bold">x402-Razorpay</span>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="text-[#777169]">SIMULATE EXTERNAL AI BUYER</span>
+                    <span className="text-emerald-500 font-bold">x402 + AP2/1.1</span>
+                  </div>
+                  <h4 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-[#0c0a09]'}`}>
+                    Autonomous Agent Transaction Sandbox
+                  </h4>
                 </div>
-                <p className="text-xs text-text-muted leading-relaxed">
-                  When an external AI agent queries <code>/api/agent/transact</code> without a token, the gateway challenges it with HTTP 402 and the exact cryptographic authentication realm.
-                </p>
+
+                {/* Agent Type Selector */}
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => setSelectedAgentType('claude')}
+                    className={`p-2 rounded-xl border text-[11px] font-mono transition-all text-center ${
+                      selectedAgentType === 'claude'
+                        ? isDark
+                          ? 'bg-white text-[#0c0a09] font-bold shadow-sm'
+                          : 'bg-[#0c0a09] text-white font-bold shadow-sm'
+                        : isDark
+                        ? 'bg-[#0c0a09] border-[#292524] text-[#a8a29e]'
+                        : 'bg-[#f5f5f5] border-[#e7e5e4] text-[#4e4e4e]'
+                    }`}
+                  >
+                    Claude Agent
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedAgentType('autogpt')}
+                    className={`p-2 rounded-xl border text-[11px] font-mono transition-all text-center ${
+                      selectedAgentType === 'autogpt'
+                        ? isDark
+                          ? 'bg-white text-[#0c0a09] font-bold shadow-sm'
+                          : 'bg-[#0c0a09] text-white font-bold shadow-sm'
+                        : isDark
+                        ? 'bg-[#0c0a09] border-[#292524] text-[#a8a29e]'
+                        : 'bg-[#f5f5f5] border-[#e7e5e4] text-[#4e4e4e]'
+                    }`}
+                  >
+                    AutoGPT
+                  </button>
+
+                  <button
+                    onClick={() => setSelectedAgentType('perplexity')}
+                    className={`p-2 rounded-xl border text-[11px] font-mono transition-all text-center ${
+                      selectedAgentType === 'perplexity'
+                        ? isDark
+                          ? 'bg-white text-[#0c0a09] font-bold shadow-sm'
+                          : 'bg-[#0c0a09] text-white font-bold shadow-sm'
+                        : isDark
+                        ? 'bg-[#0c0a09] border-[#292524] text-[#a8a29e]'
+                        : 'bg-[#f5f5f5] border-[#e7e5e4] text-[#4e4e4e]'
+                    }`}
+                  >
+                    Perplexity
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleRunAgentHandshake}
+                  disabled={isHandshaking}
+                  className={`w-full py-2.5 rounded-full font-medium text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm ${
+                    isDark ? 'bg-white text-[#0c0a09] hover:bg-[#f5f5f4]' : 'bg-[#0c0a09] text-white hover:bg-[#292524]'
+                  }`}
+                >
+                  {isHandshaking ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                  )}
+                  <span>
+                    {isHandshaking
+                      ? 'Executing AP2/1.1 Handshake...'
+                      : `Execute Handshake as ${selectedAgentType.toUpperCase()}`}
+                  </span>
+                </button>
+
+                {/* Handshake Result Box */}
+                {handshakeResult && (
+                  <div
+                    className={`p-3.5 rounded-xl border font-mono text-[11px] space-y-1.5 animate-in fade-in duration-200 ${
+                      isDark ? 'bg-[#0c0a09] border-[#292524]' : 'bg-[#f5f5f5] border-[#e7e5e4]'
+                    }`}
+                  >
+                    <div className="flex justify-between font-bold border-b border-hairline/40 pb-1">
+                      <span>PROTOCOL RECEIPT</span>
+                      <span className="text-emerald-500">{handshakeResult.latencyMs}ms</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Status:</span>
+                      <span className="font-semibold text-emerald-500">{handshakeResult.status}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Razorpay Order:</span>
+                      <span className="truncate">{handshakeResult.orderId}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Receipt Token:</span>
+                      <span className="text-[#777169]">{handshakeResult.receiptId}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -20,7 +20,12 @@ import {
   Terminal,
   Volume2,
   RefreshCw,
-  CreditCard
+  CreditCard,
+  Mic,
+  MicOff,
+  Copy,
+  Check,
+  Zap
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import confetti from 'canvas-confetti';
@@ -44,13 +49,14 @@ export const AgentConversationalCheckout: React.FC = () => {
 
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const [gatedModalOpen, setGatedModalOpen] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<RazorpayOrderResponse | null>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'msg_01',
       sender: 'agent',
-      text: 'Namaste! I am your autonomous Kubra Agent. I have active UPI AutoPay mandate man_razor_npci_88291 (autonomous up to ₹500, hard limit ₹1,000). Tell me what you need across local Kiranas & hardware stores.',
+      text: 'Namaste! I am your autonomous Kubra Agent. I have an active UPI AutoPay mandate (man_razor_npci_88291) bounded up to ₹500 for autonomous buys and ₹1,000 max. Tell or speak what you need across local Kiranas & hardware stores.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -61,6 +67,38 @@ export const AgentConversationalCheckout: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Web Audio chime for agent responses
+  const playAudioChime = (type: 'success' | 'gated' | 'click' = 'success') => {
+    try {
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'success') {
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880.00, ctx.currentTime + 0.15); // A5
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } else if (type === 'gated') {
+        osc.frequency.setValueAtTime(440.00, ctx.currentTime);
+        osc.frequency.setValueAtTime(349.23, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.14, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      }
+    } catch {
+      // AudioContext unavailable or suppressed
+    }
+  };
+
   const speakMessage = (text: string) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -69,6 +107,21 @@ export const AgentConversationalCheckout: React.FC = () => {
       utterance.lang = 'en-IN';
       window.speechSynthesis.speak(utterance);
     }
+  };
+
+  const handleVoiceInput = () => {
+    setIsListening(true);
+    setTimeout(() => {
+      setIsListening(false);
+      const sampleQueries = [
+        'Order 5kg Aashirvaad Atta under ₹300 autonomously',
+        'Order 5kg Atta and 1L Mustard Oil from Gupta Kirana',
+        'Order Groceries plus Bajaj Mixer Blade replacement'
+      ];
+      const randomQuery = sampleQueries[Math.floor(Math.random() * sampleQueries.length)];
+      setInput(randomQuery);
+      handleSendMessage(randomQuery);
+    }, 1500);
   };
 
   const handleSendMessage = (customText?: string) => {
@@ -98,7 +151,7 @@ export const AgentConversationalCheckout: React.FC = () => {
         const rzpOrder = createRazorpayOrder(total, `rcpt_${Date.now()}`);
         simulateRazorpayCapture(rzpOrder);
 
-        responseText = `Discovered 5kg Aashirvaad Atta at Gupta Super Bazaar (₹245.00). Checked spending bounds: ₹245 < ₹500 autonomous threshold. Executed zero-touch payment via Razorpay order ${rzpOrder.id}. Delivery courier dispatched!`;
+        responseText = `Discovered 5kg Aashirvaad Atta at Gupta Super Bazaar (₹245.00). Evaluated spending policy: ₹245.00 < ₹500.00 autonomous threshold. Zero-touch payment executed via Razorpay order ${rzpOrder.id}. Local delivery courier dispatched!`;
 
         actionPayload = {
           skus: [{ name: 'Aashirvaad MP Atta 5kg', price: 245, qty: 1 }],
@@ -107,6 +160,7 @@ export const AgentConversationalCheckout: React.FC = () => {
           status: 'EXECUTED_AUTONOMOUS'
         };
 
+        playAudioChime('success');
         confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
       }
       // Case 2: Above threshold (> ₹500) -> Gated human approval
@@ -115,7 +169,7 @@ export const AgentConversationalCheckout: React.FC = () => {
         const rzpOrder = createRazorpayOrder(total, `rcpt_${Date.now()}`);
         setPendingOrder(rzpOrder);
 
-        responseText = `Compiled multi-seller bundle: 5kg Atta (₹245) + 1L Mustard Oil (₹142) from Gupta Kirana + Bajaj 500W Mixer Blade (₹280) from Pooja Hardware. Total: ₹667.00. This exceeds your autonomous limit (₹500), so I need your 1-tap consent to authorize Razorpay order ${rzpOrder.id}.`;
+        responseText = `Compiled multi-seller bundle: 5kg Atta (₹245) + 1L Mustard Oil (₹142) from Gupta Kirana + Bajaj 500W Mixer Blade (₹280) from Pooja Hardware. Total: ₹667.00. This exceeds your ₹500 autonomous threshold, requiring your 1-tap consent before Razorpay charge.`;
 
         actionPayload = {
           skus: [
@@ -128,11 +182,13 @@ export const AgentConversationalCheckout: React.FC = () => {
           status: 'PENDING_GATED_APPROVAL'
         };
 
+        playAudioChime('gated');
         setGatedModalOpen(true);
       }
       // Case 3: General conversational inquiry
       else {
-        responseText = `I checked the UAP catalog across 3 local merchants. Gupta Super Bazaar has fresh Atta (₹245) and Mustard Oil (₹142); Pooja Hardware has electrical spares. Just say "Order Atta" or "Order Groceries + Mixer Blade" to execute!`;
+        responseText = `I searched the UAP network across Ghatkopar merchants. Gupta Super Bazaar has fresh Atta (₹245) and Mustard Oil (₹142); Pooja Hardware has spare mixer parts. Say "Order Atta" or "Order Groceries + Mixer Blade" to execute!`;
+        playAudioChime('success');
       }
 
       const agentMsg: Message = {
@@ -146,7 +202,7 @@ export const AgentConversationalCheckout: React.FC = () => {
       setMessages((prev) => [...prev, agentMsg]);
       setIsProcessing(false);
       speakMessage(responseText);
-    }, 900);
+    }, 850);
   };
 
   const handleApproveGatedOrder = () => {
@@ -161,6 +217,7 @@ export const AgentConversationalCheckout: React.FC = () => {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
+    playAudioChime('success');
     setMessages((prev) => [...prev, approvedMsg]);
     confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
   };
@@ -293,10 +350,32 @@ export const AgentConversationalCheckout: React.FC = () => {
         >
           🛡️ Gated Threshold: Groceries + Hardware (₹667)
         </button>
+        <button
+          onClick={() => handleSendMessage('Check stock and delivery time at Gupta Kirana')}
+          className="px-3 py-1 rounded-full border border-hairline bg-white hover:bg-canvas text-text-body whitespace-nowrap transition-colors"
+        >
+          🔍 Inspect Merchant Stock
+        </button>
       </div>
 
-      {/* Input Bar */}
+      {/* Input Bar with Voice Support */}
       <div className="p-3 border-t border-hairline flex items-center gap-2 bg-canvas">
+        <button
+          onClick={handleVoiceInput}
+          type="button"
+          title="Speak to Agent"
+          className={`p-2.5 rounded-full border text-xs font-medium flex items-center gap-1.5 transition-all ${
+            isListening
+              ? 'bg-rose-600 text-white border-rose-600 animate-pulse'
+              : isDark
+              ? 'bg-[#1c1917] text-[#a8a29e] border-[#292524] hover:text-white'
+              : 'bg-white text-[#4e4e4e] border-[#e7e5e4] hover:bg-[#fafafa]'
+          }`}
+        >
+          {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+          <span className="hidden sm:inline">{isListening ? 'Listening...' : 'Voice'}</span>
+        </button>
+
         <input
           type="text"
           value={input}
